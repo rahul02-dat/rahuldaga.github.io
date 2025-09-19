@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rahul Daga - Machine Learning Engineer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #e0e0e0;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(30, 30, 30, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            color: #ffffff;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header h2 {
+            font-size: 1.5rem;
+            color: #b0b0b0;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #e0e0e0;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            padding: 10px 15px;
+            border-radius: 25px;
+            background: rgba(50, 50, 50, 0.7);
+        }
+
+        .contact-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.2);
+            background: rgba(60, 60, 60, 0.9);
+            color: #ff6b6b;
+        }
+
+        .section {
+            background: rgba(30, 30, 30, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .section h3 {
+            font-size: 2rem;
+            color: #ffffff;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            border-radius: 2px;
+        }
+
+        .experience-item, .project-item, .education-item {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: rgba(248, 249, 250, 0.8);
+            border-radius: 15px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .experience-item:hover, .project-item:hover, .education-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .item-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .item-subtitle {
+            color: #667eea;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .item-date {
+            color: #7f8c8d;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .item-location {
+            color: #95a5a6;
+            font-style: italic;
+        }
+
+        .item-description ul {
+            list-style: none;
+            margin-top: 15px;
+        }
+
+        .item-description li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+            color: #000000; /* Changed to black */
+        }
+
+        .item-description li::before {
+            content: '▶';
+            position: absolute;
+            left: 0;
+            color: #ff6b6b;
+            font-size: 0.8rem;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .skill-category {
+            background: rgba(40, 40, 40, 0.8);
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 4px solid #feca57;
+        }
+
+        .skill-category h4 {
+            color: #ffffff;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .skill-tag {
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            color: #1a1a1a;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .skill-tag:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .languages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .language-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(40, 40, 40, 0.8);
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            color: #e0e0e0;
+        }
+
+        .language-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.1);
+            background: rgba(45, 45, 45, 0.9);
+        }
+
+        .language-item h4 {
+            color: #ffffff;
+        }
+
+        .interests-list {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .interest-item {
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            color: #1a1a1a;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .interest-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);
+        }
+
+        .certificates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .certificate-item {
+            background: rgba(40, 40, 40, 0.8);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid rgba(255, 107, 107, 0.2);
+            transition: all 0.3s ease;
+            color: #e0e0e0;
+        }
+
+        .certificate-item:hover {
+            border-color: #ff6b6b;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.1);
+            background: rgba(45, 45, 45, 0.9);
+        }
+
+        .certificate-item h4 {
+            color: #ffffff;
+        }
+
+        .download-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .contact-info {
+                gap: 15px;
+            }
+
+            .item-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .item-date {
+                margin-top: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 25px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            .contact-info {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <h1>Rahul Daga</h1>
+            <h2>Machine Learning Engineer</h2>
+            <div class="contact-info">
+                <a href="mailto:rahul.0411.da@gmail.com" class="contact-item">
+                    <span>📧</span> rahul.0411.da@gmail.com
+                </a>
+                <a href="tel:+916266005160" class="contact-item">
+                    <span>📱</span> +91 6266005160
+                </a>
+                <span class="contact-item">
+                    <span>📍</span> Pune, India
+                </span>
+                <a href="https://linkedin.com/in/rahuldaga0211" class="contact-item" target="_blank">
+                    <span>💼</span> LinkedIn Profile
+                </a>
+            </div>
+        </div>
+
+        <!-- Education Section -->
+        <div class="section">
+            <h3>Education</h3>
+            <div class="education-item">
+                <div class="item-header">
+                    <div>
+                        <div class="item-title">Vishwakarma Institute of Technology, Pune</div>
+                        <div class="item-subtitle">Bachelor of Technology, Information Technology</div>
+                    </div>
+                    <div class="item-date">Oct 2022 – Present</div>
+                </div>
+            </div>
+            <div class="education-item">
+                <div class="item-header">
+                    <div>
+                        <div class="item-title">Ryan International School, Raipur</div>
+                        <div class="item-subtitle">High School CBSE</div>
+                    </div>
+                    <div class="item-date">Apr 2020 – Mar 2022</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Professional Experience Section -->
+        <div class="section">
+            <h3>Professional Experience</h3>
+            <div class="experience-item">
+                <div class="item-header">
+                    <div>
+                        <div class="item-title">Machine Learning Engineer</div>
+                        <div class="item-subtitle">Archsoft, Raipur</div>
+                        <div class="item-location">Python, Deep Learning, SQLite, Flask</div>
+                    </div>
+                    <div class="item-date">Jun 2025 – Aug 2025</div>
+                </div>
+                <div class="item-description">
+                    <ul>
+                        <li>Developed a Facial Recognition Based Attendance System for employer to track attendance of employees at a particular location</li>
+                        <li>Used FaceNet Dataset to train the model. 3D convolutional networks were implemented for recognizing facial features more accurately</li>
+                        <li>Achieved 90% overall accuracy for the system</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Projects Section -->
+        <div class="section">
+            <h3>Projects</h3>
+            
+            <div class="project-item">
+                <div class="item-title">Securing Automotive Using Iris Recognition</div>
+                <div class="item-subtitle">Python, Machine Learning, Raspberry-Pi</div>
+                <div class="item-description">
+                    <ul>
+                        <li>Implemented an automobile security system based on Iris Recognition using Raspberry-Pi controller</li>
+                        <li>Worked on four major segments: Iris Image Capture, Segmentation and Normalization, Feature Extraction, matching and recognition</li>
+                        <li>Used various transforms for all necessary steps. Implemented KNN Classifier for image classification and recognition</li>
+                        <li>Average time elapsed for recognition and unlocking: 2.5 - 4.5 seconds</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="project-item">
+                <div class="item-title">Multi Agent Reinforcement Learning using Common Reward Pool</div>
+                <div class="item-subtitle">Deep Q Learning, Python, Reinforcement Learning</div>
+                <div class="item-description">
+                    <ul>
+                        <li>Developed a Multi Agent framework where autonomous agents learned complex cooperative strategies through shared, dynamic reward pool</li>
+                        <li>Agents developed "forager" and "scout" personas with dynamic role shifting based on pool's state</li>
+                        <li>Integrated centralized reward architecture for synchronous navigation in complex urban environment with static obstacles</li>
+                        <li>Achieved 45% increase in mission success, 30% reduction in completion time, and near-elimination of collisions</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="project-item">
+                <div class="item-title">AI Based Voice Interviewer</div>
+                <div class="item-subtitle">NLP, NextJS, SupaBase, Clerk</div>
+                <div class="item-description">
+                    <ul>
+                        <li>Developed an AI-based voice interviewer for natural, conversational interviews with accurate transcription and meaningful insights</li>
+                        <li>Implemented speech-to-text pipeline for interview answer transcription</li>
+                        <li>Applied NLP for structural coherence, relevance analysis, and sentiment analysis of candidate responses</li>
+                        <li>Integrated automated feedback generation adhering to established pedagogical principles</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="project-item">
+                <div class="item-title">Multi-Layered Captcha Protection System</div>
+                <div class="item-subtitle">Python, TensorFlow, Full Stack</div>
+                <div class="item-description">
+                    <ul>
+                        <li>Created multi-modal bot detection system integrating eye-tracking, mouse dynamics, and handwriting analysis</li>
+                        <li>Implemented handwriting recognition module using TensorFlow analyzing mouse-drawn text with stroke fluidity and pressure verification</li>
+                        <li>Developed gaze tracking module for real-time eye movement verification and mouse movement tracer for user validation</li>
+                        <li>Achieved progressive accuracy of 95% enhancing overall system security against automated scripts</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Skills Section -->
+        <div class="section">
+            <h3>Technical Skills</h3>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h4>Programming Languages</h4>
+                    <div class="skills-list">
+                        <span class="skill-tag">Python</span>
+                        <span class="skill-tag">C++</span>
+                        <span class="skill-tag">JavaScript</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h4>Technologies & Frameworks</h4>
+                    <div class="skills-list">
+                        <span class="skill-tag">NumPy</span>
+                        <span class="skill-tag">Pandas</span>
+                        <span class="skill-tag">TensorFlow</span>
+                        <span class="skill-tag">Flask</span>
+                        <span class="skill-tag">Scikit-Learn</span>
+                        <span class="skill-tag">OpenCV</span>
+                        <span class="skill-tag">MediaPipe</span>
+                        <span class="skill-tag">Matplotlib</span>
+                        <span class="skill-tag">SQLite</span>
+                        <span class="skill-tag">SQL</span>
+                        <span class="skill-tag">Jupyter</span>
+                        <span class="skill-tag">Unix (macOS)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Certificates Section -->
+        <div class="section">
+            <h3>Certifications</h3>
+            <div class="certificates-grid">
+                <div class="certificate-item">
+                    <h4>IBM DevOps and Software Engineering</h4>
+                </div>
+                <div class="certificate-item">
+                    <h4>Deloitte - Australia Cyber Security Job Simulation</h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- Languages Section -->
+        <div class="section">
+            <h3>Languages</h3>
+            <div class="languages-grid">
+                <div class="language-item">
+                    <h4>Hindi</h4>
+                    <p>Native Proficiency</p>
+                </div>
+                <div class="language-item">
+                    <h4>English</h4>
+                    <p>Professional Proficiency</p>
+                </div>
+                <div class="language-item">
+                    <h4>French</h4>
+                    <p>Professional Proficiency</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interests Section -->
+        <div class="section">
+            <h3>Interests</h3>
+            <div class="interests-list">
+                <div class="interest-item">AI/Machine Learning</div>
+                <div class="interest-item">Cyber Security</div>
+                <div class="interest-item">Music</div>
+            </div>
+        </div>
+
+
+    </div>
+</body>
+</html>
