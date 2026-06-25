@@ -3,270 +3,906 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rahul Daga</title>
+<title>Rahul Daga — ML Engineer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
+/* ─── RESET & ROOT ─── */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --bg:#07090d;
-  --surface:#0d1117;
-  --surface2:#131920;
-  --border:rgba(255,255,255,0.06);
-  --border-hi:rgba(255,255,255,0.14);
-  --text:#c8d8e8;
-  --dim:#5a7080;
-  --accent:#4af0c4;
-  --blue:#38a8ff;
-  --orange:#ff9f1c;
-  --red:#ff6b6b;
-}
 html{scroll-behavior:smooth}
-body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+:root{
+  --bg:#07080d;
+  --s1:#0c0d15;
+  --s2:#11121c;
+  --border:rgba(124,92,252,.09);
+  --border-hi:rgba(124,92,252,.3);
+  --text:#c4bfe6;
+  --dim:#52506e;
+  --accent:#7c5cfc;
+  --red:#f43f5e;
+  --green:#10b981;
+  --amber:#f59e0b;
+  --nav-h:64px;
+}
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg);color:var(--text);
+  overflow-x:hidden;overflow-y:hidden;
+}
+body.loaded{overflow-y:auto}
 
-/* NOISE */
-body::after{content:'';position:fixed;inset:-200%;width:500%;height:500%;
-background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-opacity:.022;pointer-events:none;z-index:9998;animation:grain 8s steps(10) infinite}
-@keyframes grain{0%,100%{transform:translate(0,0)}10%{transform:translate(-5%,-10%)}30%{transform:translate(7%,-25%)}50%{transform:translate(-15%,10%)}70%{transform:translate(0%,15%)}90%{transform:translate(-10%,10%)}}
+/* ─── NOISE ─── */
+body::after{
+  content:'';position:fixed;inset:-200%;width:500%;height:500%;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:.016;pointer-events:none;z-index:9998;
+  animation:grain 8s steps(10) infinite;
+}
+@keyframes grain{
+  0%,100%{transform:translate(0,0)}10%{transform:translate(-5%,-10%)}
+  30%{transform:translate(7%,-25%)}50%{transform:translate(-15%,10%)}
+  70%{transform:translate(0,15%)}90%{transform:translate(-10%,10%)}
+}
 
-/* ORBS */
-.orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0}
-.o1{width:700px;height:700px;top:-200px;right:-150px;background:radial-gradient(circle,rgba(56,168,255,.05) 0%,transparent 70%)}
-.o2{width:600px;height:600px;bottom:-100px;left:-200px;background:radial-gradient(circle,rgba(74,240,196,.04) 0%,transparent 70%)}
+/* ─── LOADER ─── */
+#loader{
+  position:fixed;inset:0;z-index:9000;
+  background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:2rem;transition:opacity .6s ease;
+}
+#loader.done{opacity:0;pointer-events:none}
+.loader-terminal{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.8rem;color:var(--dim);
+  display:flex;flex-direction:column;gap:.5rem;
+  width:280px;
+}
+.loader-terminal .lt-line{display:flex;gap:.6rem;align-items:center}
+.loader-terminal .lt-prompt{color:var(--accent)}
+.loader-pct-row{
+  display:flex;align-items:baseline;gap:.8rem;
+  font-family:'Barlow Condensed',sans-serif;
+}
+#loader-num{
+  font-size:5rem;font-weight:900;color:#fff;line-height:1;
+  letter-spacing:-.03em;
+}
+.loader-pct-sym{font-family:'IBM Plex Mono',monospace;font-size:1.2rem;color:var(--accent)}
+.loader-bar-wrap{width:280px;height:2px;background:var(--s2)}
+#loader-bar{height:100%;background:var(--accent);width:0%;transition:width .04s linear}
+.loader-label{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.22em;color:var(--dim)}
 
-/* NAV */
-nav{position:fixed;top:0;width:100%;z-index:1000;padding:1.1rem 5%;display:flex;justify-content:space-between;align-items:center;background:rgba(7,9,13,.88);backdrop-filter:blur(18px);border-bottom:1px solid var(--border)}
-.logo{font-family:'Space Mono',monospace;font-size:.95rem;color:var(--accent);letter-spacing:.08em;cursor:pointer;transition:opacity .2s}
-.logo:hover{opacity:.7}
-.logo span{color:var(--dim)}
-.nav-btns{display:flex;gap:.6rem;align-items:center}
-.nav-btn{font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;padding:.6rem 1.2rem;border-radius:3px;border:1px solid var(--border-hi);background:transparent;color:var(--text);cursor:pointer;transition:all .22s;white-space:nowrap}
-.nav-btn:hover,.nav-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(74,240,196,.06)}
-.nav-btn.active{background:rgba(74,240,196,.1)}
+/* ─── NAV ─── */
+#nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  height:var(--nav-h);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 5%;
+  background:rgba(7,8,13,.0);
+  backdrop-filter:blur(0px);
+  border-bottom:1px solid transparent;
+  transition:background .3s,backdrop-filter .3s,border-color .3s;
+}
+#nav.scrolled{
+  background:rgba(7,8,13,.88);
+  backdrop-filter:blur(20px);
+  border-bottom-color:var(--border);
+}
+.nav-logo{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.88rem;letter-spacing:.14em;
+  color:var(--accent);cursor:pointer;text-decoration:none;
+}
+.nav-logo span{color:var(--dim)}
+.nav-links{display:flex;gap:.2rem;align-items:center}
+.nav-link{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--dim);text-decoration:none;
+  padding:.5rem .9rem;border-radius:3px;
+  transition:color .2s,background .2s;
+}
+.nav-link:hover,.nav-link.active{color:var(--accent);background:rgba(124,92,252,.07)}
+.nav-cta{
+  font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.1em;
+  text-transform:uppercase;padding:.5rem 1.2rem;border-radius:3px;
+  border:1px solid var(--border-hi);color:var(--accent);
+  text-decoration:none;transition:background .2s;margin-left:.6rem;
+}
+.nav-cta:hover{background:rgba(124,92,252,.1)}
 
-/* PAGE SYSTEM */
-.page{position:absolute;top:0;left:0;width:100%;min-height:100vh;padding-top:70px;opacity:0;pointer-events:none;transition:opacity .4s ease,transform .4s ease;transform:translateY(12px);z-index:1}
-.page.active{opacity:1;pointer-events:all;transform:translateY(0)}
-#app{position:relative;width:100%}
+/* ─── SECTION SHARED ─── */
+section{padding:7rem 5%;position:relative}
+.section-eyebrow{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.62rem;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:1.2rem;
+  display:flex;align-items:center;gap:.9rem;
+}
+.section-eyebrow::before{content:'';display:inline-block;width:28px;height:1px;background:var(--accent)}
+.section-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(2.6rem,5vw,3.8rem);font-weight:900;
+  color:#fff;letter-spacing:-.015em;margin-bottom:3.5rem;
+}
 
-/* ── HOME ── */
-#home{padding:0 6% 5rem}
-.home-inner{max-width:900px;margin:0 auto;padding-top:clamp(4rem,12vh,8rem)}
-.eyebrow{font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.25em;text-transform:uppercase;color:var(--accent);margin-bottom:1.5rem;display:flex;align-items:center;gap:1rem}
-.eyebrow::before{content:'';display:inline-block;width:36px;height:1px;background:var(--accent)}
-.home-inner h1{font-size:clamp(3.5rem,10vw,7rem);font-weight:800;line-height:.92;letter-spacing:-.03em;color:#fff;margin-bottom:2rem}
-.home-inner h1 .ghost{-webkit-text-stroke:1.5px rgba(255,255,255,.2);color:transparent;display:block}
-.summary{font-size:clamp(.95rem,1.5vw,1.1rem);line-height:1.9;color:var(--dim);max-width:620px;margin-bottom:3.5rem}
-.summary em{color:var(--text);font-style:normal}
+/* ─── HERO ─── */
+#hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding-top:calc(var(--nav-h) + 2rem);
+  max-width:1200px;margin:0 auto;
+}
+.hero-greeting{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.88rem;letter-spacing:.18em;color:var(--dim);
+  margin-bottom:1rem;
+}
+.hero-name{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(5rem,14vw,10rem);font-weight:900;
+  line-height:.88;letter-spacing:-.025em;color:#fff;
+  margin-bottom:.6rem;
+}
+.hero-name .cursor{
+  display:inline-block;width:6px;height:.82em;
+  background:var(--accent);margin-left:4px;
+  vertical-align:middle;
+  animation:blink 1s step-end infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.hero-title{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:clamp(.8rem,1.4vw,.95rem);color:var(--dim);
+  letter-spacing:.08em;margin-bottom:2.8rem;
+}
+.hero-bio{
+  font-size:clamp(.95rem,1.4vw,1.06rem);line-height:1.9;
+  color:var(--dim);max-width:660px;margin-bottom:1.4rem;
+}
+.hero-bio em,.hero-bio strong{color:var(--text);font-style:normal}
+.hero-bio+.hero-bio{margin-bottom:3rem}
+.hero-actions{display:flex;flex-wrap:wrap;gap:.9rem;align-items:center;margin-bottom:2.4rem}
+.btn-primary{
+  font-family:'IBM Plex Mono',monospace;font-size:.72rem;
+  letter-spacing:.12em;text-transform:uppercase;
+  padding:.85rem 2rem;border-radius:3px;
+  background:var(--accent);color:#fff;
+  text-decoration:none;border:none;cursor:pointer;
+  transition:opacity .2s,transform .2s;
+}
+.btn-primary:hover{opacity:.85;transform:translateY(-1px)}
+.btn-outline{
+  font-family:'IBM Plex Mono',monospace;font-size:.72rem;
+  letter-spacing:.12em;text-transform:uppercase;
+  padding:.85rem 2rem;border-radius:3px;
+  background:transparent;color:var(--text);
+  border:1px solid var(--border-hi);text-decoration:none;
+  transition:border-color .2s,color .2s;
+}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+.hero-socials{display:flex;gap:1rem;align-items:center}
+.social-link{
+  font-family:'IBM Plex Mono',monospace;font-size:.65rem;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--dim);text-decoration:none;
+  padding:.4rem .8rem;border:1px solid var(--border);
+  border-radius:2px;transition:all .2s;
+}
+.social-link:hover{border-color:var(--border-hi);color:var(--accent)}
+.hero-divider{
+  position:absolute;bottom:2.5rem;left:5%;
+  font-family:'IBM Plex Mono',monospace;font-size:.6rem;
+  letter-spacing:.22em;color:var(--dim);
+  display:flex;align-items:center;gap:.8rem;
+}
+.hero-divider::after{content:'';display:inline-block;width:60px;height:1px;background:var(--dim)}
 
-/* STATS ROW */
-.stats{display:flex;gap:3rem;padding:2.5rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:4rem;flex-wrap:wrap}
-.stat-n{font-family:'Space Mono',monospace;font-size:1.8rem;font-weight:700;color:#fff}
-.stat-n .a{color:var(--accent)}
-.stat-l{font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-top:.2rem}
+/* ─── ABOUT ─── */
+#about{background:var(--s1)}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;max-width:1100px}
+.about-left{}
+.about-sub{font-size:.95rem;line-height:1.9;color:var(--dim);margin-bottom:1.6rem}
+.about-sub em{color:var(--text);font-style:normal}
+.about-contacts{margin-top:2.5rem;display:flex;flex-direction:column;gap:.9rem}
+.contact-row{display:flex;gap:.8rem;align-items:flex-start}
+.contact-label{
+  font-family:'IBM Plex Mono',monospace;font-size:.6rem;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:var(--dim);min-width:80px;padding-top:.1rem;
+}
+.contact-val{font-size:.88rem;color:var(--text)}
+.contact-val a{color:var(--accent);text-decoration:none}
+.contact-val a:hover{text-decoration:underline}
+.about-right{}
+.core-label{
+  font-family:'IBM Plex Mono',monospace;font-size:.6rem;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--dim);
+  margin-bottom:1.4rem;
+}
+.core-chips{display:flex;flex-wrap:wrap;gap:.55rem}
+.chip{
+  font-family:'IBM Plex Mono',monospace;font-size:.68rem;
+  padding:.35rem .85rem;border-radius:2px;
+  background:var(--s2);border:1px solid var(--border);
+  color:var(--text);transition:.18s;white-space:nowrap;cursor:default;
+}
+.chip:hover{border-color:var(--border-hi);color:var(--accent)}
+.chip-hi{background:rgba(124,92,252,.07);color:var(--accent);border-color:rgba(124,92,252,.22)}
+.chip-red{background:rgba(244,63,94,.06);color:var(--red);border-color:rgba(244,63,94,.2)}
+.chip-green{background:rgba(16,185,129,.06);color:var(--green);border-color:rgba(16,185,129,.2)}
+.chip-amber{background:rgba(245,158,11,.06);color:var(--amber);border-color:rgba(245,158,11,.2)}
 
-/* TECH STACK */
-.stack-title{font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.25em;text-transform:uppercase;color:var(--dim);margin-bottom:1.8rem}
-.stack-grid{display:flex;flex-direction:column;gap:1.2rem;max-width:780px}
-.stack-row{display:flex;gap:.75rem;align-items:flex-start;flex-wrap:nowrap}
-.stack-cat{font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);min-width:110px;padding-top:.35rem;flex-shrink:0}
-.chips{display:flex;flex-wrap:wrap;gap:.45rem}
-.chip{font-family:'Space Mono',monospace;font-size:.7rem;padding:.3rem .75rem;border-radius:2px;background:var(--surface);border:1px solid var(--border);color:var(--text);transition:.2s;white-space:nowrap}
-.chip:hover{border-color:var(--accent);color:var(--accent)}
-.chip.hi{background:rgba(74,240,196,.06);color:var(--accent);border-color:rgba(74,240,196,.22)}
+/* ─── SKILLS ─── */
+#skills{}
+.skills-tabs{display:flex;gap:.3rem;flex-wrap:wrap;margin-bottom:2.5rem}
+.skill-tab{
+  font-family:'IBM Plex Mono',monospace;font-size:.66rem;
+  letter-spacing:.1em;text-transform:uppercase;
+  padding:.5rem 1.1rem;border-radius:3px;
+  border:1px solid var(--border);background:transparent;
+  color:var(--dim);cursor:pointer;transition:all .2s;
+}
+.skill-tab:hover{border-color:var(--border-hi);color:var(--text)}
+.skill-tab.active{border-color:var(--accent);color:var(--accent);background:rgba(124,92,252,.08)}
+.skill-panel{display:none}
+.skill-panel.active{display:flex;flex-wrap:wrap;gap:.5rem}
 
-/* ── SECTION PAGES ── */
-.page-inner{max-width:940px;margin:0 auto;padding:3rem 6% 6rem}
-.page-header{margin-bottom:3.5rem;border-bottom:1px solid var(--border);padding-bottom:2rem}
-.page-num{font-family:'Space Mono',monospace;font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:var(--accent);margin-bottom:.75rem}
-.page-title{font-size:clamp(2rem,5vw,3.2rem);font-weight:800;letter-spacing:-.02em;color:#fff}
-.page-sub{font-family:'Space Mono',monospace;font-size:.82rem;line-height:1.8;color:var(--dim);margin-top:.75rem}
+/* ─── PROJECTS ─── */
+#projects{background:var(--s1);padding-left:0;padding-right:0}
+.projects-inner{padding:0 5%}
+.ticker-wrap{
+  overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:.85rem 0;margin-bottom:4rem;
+}
+.ticker-track{
+  display:flex;gap:0;white-space:nowrap;
+  animation:ticker 28s linear infinite;
+}
+.ticker-item{
+  font-family:'IBM Plex Mono',monospace;font-size:.72rem;
+  letter-spacing:.22em;text-transform:uppercase;
+  color:var(--dim);padding:0 2.5rem;flex-shrink:0;
+}
+.ticker-item span{color:var(--accent)}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
-/* EXPERIENCE CARDS */
-.exp-list{display:flex;flex-direction:column;gap:1.5rem}
-.exp-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:2rem 2.5rem;position:relative;overflow:hidden;transition:border-color .3s,transform .3s}
-.exp-card:hover{border-color:var(--border-hi);transform:translateX(5px)}
-.exp-card.isro{border-left:3px solid var(--orange)}
-.exp-card.archsoft{border-left:3px solid var(--blue)}
-.exp-top{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap;margin-bottom:.4rem}
-.exp-role{font-size:1.25rem;font-weight:700;color:#fff}
-.badge{font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;padding:.25rem .7rem;border-radius:2px}
-.badge-now{background:rgba(74,240,196,.1);color:var(--accent);border:1px solid rgba(74,240,196,.3)}
-.badge-past{background:rgba(56,168,255,.08);color:var(--blue);border:1px solid rgba(56,168,255,.2)}
-.exp-org{font-family:'Space Mono',monospace;font-size:.78rem;margin-bottom:1.5rem}
-.exp-card.isro .exp-org{color:var(--orange)}
-.exp-card.archsoft .exp-org{color:var(--blue)}
-.exp-pts{list-style:none;display:flex;flex-direction:column;gap:.65rem;margin-bottom:1.5rem}
-.exp-pts li{font-size:.9rem;line-height:1.75;color:var(--dim);padding-left:1.2rem;position:relative}
-.exp-pts li::before{content:'→';position:absolute;left:0;color:var(--accent);font-size:.78rem;top:.05rem}
+.proj-list{display:flex;flex-direction:column;gap:1.8rem}
+.proj-card{
+  border:1px solid var(--border);border-radius:6px;
+  padding:2.4rem 2.8rem;
+  background:var(--s2);
+  position:relative;overflow:hidden;
+  transition:border-color .3s,transform .3s,box-shadow .3s;
+}
+.proj-card:hover{
+  border-color:var(--border-hi);
+  transform:translateY(-3px);
+  box-shadow:0 20px 56px rgba(0,0,0,.5);
+}
+.proj-card::before{
+  content:'';position:absolute;top:0;left:0;
+  width:3px;height:100%;
+}
+.proj-card.ml::before{background:var(--accent)}
+.proj-card.sec::before{background:var(--red)}
+.proj-card.cv::before{background:var(--green)}
+.proj-card.misc::before{background:var(--amber)}
+.proj-head{display:flex;justify-content:space-between;align-items:flex-start;gap:1.5rem;margin-bottom:1.6rem;flex-wrap:wrap}
+.proj-meta{}
+.proj-num{
+  font-family:'IBM Plex Mono',monospace;font-size:.58rem;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--dim);
+  margin-bottom:.5rem;
+}
+.proj-name{
+  font-family:'Barlow Condensed',sans-serif;font-size:1.7rem;
+  font-weight:800;color:#fff;letter-spacing:-.01em;line-height:1.15;
+  margin-bottom:.45rem;
+}
+.proj-metric{
+  font-family:'IBM Plex Mono',monospace;font-size:.64rem;color:var(--accent);
+}
+.proj-card.sec .proj-metric{color:var(--red)}
+.proj-card.cv .proj-metric{color:var(--green)}
+.proj-card.misc .proj-metric{color:var(--amber)}
+.proj-type-badge{
+  font-family:'IBM Plex Mono',monospace;font-size:.58rem;
+  letter-spacing:.18em;text-transform:uppercase;
+  padding:.28rem .75rem;border-radius:2px;border:1px solid;
+  white-space:nowrap;flex-shrink:0;
+}
+.ml .proj-type-badge{color:var(--accent);border-color:rgba(124,92,252,.3);background:rgba(124,92,252,.07)}
+.sec .proj-type-badge{color:var(--red);border-color:rgba(244,63,94,.3);background:rgba(244,63,94,.07)}
+.cv .proj-type-badge{color:var(--green);border-color:rgba(16,185,129,.3);background:rgba(16,185,129,.07)}
+.misc .proj-type-badge{color:var(--amber);border-color:rgba(245,158,11,.3);background:rgba(245,158,11,.07)}
+.proj-pts{list-style:none;display:flex;flex-direction:column;gap:.65rem;margin-bottom:1.8rem}
+.proj-pts li{
+  font-size:.9rem;line-height:1.8;color:var(--dim);
+  padding-left:1.4rem;position:relative;
+}
+.proj-pts li::before{
+  content:'▸';position:absolute;left:0;font-size:.68rem;top:.18rem;
+}
+.ml .proj-pts li::before{color:var(--accent)}
+.sec .proj-pts li::before{color:var(--red)}
+.cv .proj-pts li::before{color:var(--green)}
+.misc .proj-pts li::before{color:var(--amber)}
+.proj-pts li strong{color:var(--text);font-weight:600}
+.proj-stack{display:flex;flex-wrap:wrap;gap:.42rem}
+
+/* ─── EXPERIENCE ─── */
+#experience{}
+.exp-list{display:flex;flex-direction:column;gap:1.6rem;max-width:900px}
+.exp-card{
+  background:var(--s1);border:1px solid var(--border);
+  border-radius:6px;padding:2.2rem 2.6rem;
+  position:relative;overflow:hidden;
+  transition:border-color .3s,transform .3s;
+}
+.exp-card:hover{border-color:var(--border-hi);transform:translateX(4px)}
+.exp-card.isro::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--amber)}
+.exp-card.archsoft::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--accent)}
+.exp-card.edu::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--green)}
+.exp-top{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap;margin-bottom:.35rem}
+.exp-role{font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;font-weight:800;color:#fff}
+.badge{
+  font-family:'IBM Plex Mono',monospace;font-size:.58rem;
+  letter-spacing:.14em;text-transform:uppercase;padding:.25rem .7rem;
+  border-radius:2px;white-space:nowrap;flex-shrink:0;
+}
+.badge-now{background:rgba(16,185,129,.1);color:var(--green);border:1px solid rgba(16,185,129,.28)}
+.badge-past{background:rgba(124,92,252,.08);color:var(--accent);border:1px solid rgba(124,92,252,.22)}
+.exp-org{
+  font-family:'IBM Plex Mono',monospace;font-size:.74rem;margin-bottom:1.4rem;
+}
+.exp-card.isro .exp-org{color:var(--amber)}
+.exp-card.archsoft .exp-org{color:var(--accent)}
+.exp-card.edu .exp-org{color:var(--green)}
+.exp-pts{list-style:none;display:flex;flex-direction:column;gap:.62rem;margin-bottom:1.4rem}
+.exp-pts li{font-size:.9rem;line-height:1.78;color:var(--dim);padding-left:1.4rem;position:relative}
+.exp-pts li::before{content:'▸';position:absolute;left:0;color:var(--accent);font-size:.68rem;top:.18rem}
 .exp-pts li strong{color:var(--text);font-weight:600}
-.exp-stack{display:flex;flex-wrap:wrap;gap:.45rem}
+.exp-chips{display:flex;flex-wrap:wrap;gap:.42rem}
 
-/* PROJECT CARDS */
-.proj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.4rem}
-.proj-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:2rem;display:flex;flex-direction:column;transition:all .3s;position:relative;overflow:hidden}
-.proj-card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(74,240,196,.03) 0%,transparent 60%);pointer-events:none;opacity:0;transition:opacity .3s}
-.proj-card:hover{border-color:var(--border-hi);transform:translateY(-4px);box-shadow:0 20px 48px rgba(0,0,0,.4)}
-.proj-card:hover::after{opacity:1}
-.proj-id{font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:.2em;color:var(--dim);margin-bottom:.9rem}
-.proj-name{font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:.7rem;line-height:1.3}
-.proj-metric{font-family:'Space Mono',monospace;font-size:.7rem;color:var(--accent);background:rgba(74,240,196,.06);border:1px solid rgba(74,240,196,.15);border-radius:2px;padding:.32rem .7rem;display:inline-block;margin-bottom:.85rem;line-height:1}
-.proj-desc{font-size:.87rem;line-height:1.75;color:var(--dim);flex:1;margin-bottom:1.4rem}
-
-/* PUBLICATIONS */
-.pub-list{display:flex;flex-direction:column;gap:1.5rem;max-width:760px}
-.pub-card{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--red);border-radius:6px;padding:2rem 2.5rem;transition:border-color .3s}
+/* ─── RESEARCH ─── */
+#research{background:var(--s1)}
+.research-inner{max-width:860px}
+.pub-card{
+  border:1px solid var(--border);border-left:3px solid var(--red);
+  border-radius:6px;padding:2.2rem 2.6rem;background:var(--s2);
+  transition:border-color .3s;margin-bottom:2.5rem;
+}
 .pub-card:hover{border-color:var(--border-hi)}
-.pub-venue{font-family:'Space Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin-bottom:.55rem}
-.pub-title{font-size:1.15rem;font-weight:700;color:#fff;margin-bottom:.8rem;line-height:1.35}
-.pub-body{font-size:.9rem;line-height:1.75;color:var(--dim)}
-.pub-tags{display:flex;gap:.45rem;flex-wrap:wrap;margin-top:1.2rem}
-
-.cert-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem;margin-top:2.5rem}
-.cert-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1.4rem;transition:all .3s}
+.pub-venue{
+  font-family:'IBM Plex Mono',monospace;font-size:.62rem;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin-bottom:.55rem;
+}
+.pub-title{
+  font-family:'Barlow Condensed',sans-serif;font-size:1.45rem;
+  font-weight:800;color:#fff;margin-bottom:.8rem;line-height:1.25;
+}
+.pub-body{font-size:.9rem;line-height:1.8;color:var(--dim);margin-bottom:1.2rem}
+.pub-tags{display:flex;flex-wrap:wrap;gap:.42rem}
+.cert-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-top:2rem}
+.cert-card{
+  background:var(--s2);border:1px solid var(--border);border-radius:5px;
+  padding:1.4rem;transition:all .28s;
+}
 .cert-card:hover{border-color:var(--border-hi);transform:translateY(-3px)}
-.cert-issuer{font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:.4rem}
-.cert-name{font-size:.92rem;font-weight:600;color:#fff;line-height:1.4}
+.cert-issuer{
+  font-family:'IBM Plex Mono',monospace;font-size:.58rem;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:.4rem;
+}
+.cert-name{font-size:.9rem;font-weight:500;color:var(--text);line-height:1.4}
 
-.section-divider{font-family:'Space Mono',monospace;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);margin:3rem 0 1.5rem;display:flex;align-items:center;gap:1rem}
-.section-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+/* ─── CONTACT ─── */
+#contact{max-width:860px;margin:0 auto}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem}
+.contact-group-label{
+  font-family:'IBM Plex Mono',monospace;font-size:.6rem;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--dim);
+  margin-bottom:1.4rem;
+}
+.contact-info-list{display:flex;flex-direction:column;gap:1.1rem}
+.ci-row{display:flex;flex-direction:column;gap:.2rem}
+.ci-key{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.ci-val{font-size:.92rem;color:var(--text)}
+.ci-val a{color:var(--accent);text-decoration:none}
+.ci-val a:hover{text-decoration:underline}
+.contact-links{display:flex;flex-direction:column;gap:.55rem;margin-top:2rem}
+.contact-link-row{
+  display:flex;align-items:center;gap:.8rem;
+  font-family:'IBM Plex Mono',monospace;font-size:.7rem;
+  color:var(--dim);text-decoration:none;
+  padding:.75rem 1rem;border:1px solid var(--border);
+  border-radius:3px;transition:all .2s;
+}
+.contact-link-row:hover{border-color:var(--border-hi);color:var(--accent)}
+.contact-link-row .cli-icon{font-size:.9rem}
+.contact-right{display:flex;flex-direction:column;gap:1rem}
+.contact-card{
+  background:var(--s1);border:1px solid var(--border);border-radius:5px;
+  padding:1.6rem;transition:border-color .2s;
+}
+.contact-card:hover{border-color:var(--border-hi)}
+.contact-card-title{
+  font-family:'IBM Plex Mono',monospace;font-size:.62rem;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--accent);
+  margin-bottom:.6rem;
+}
+.contact-card-body{font-size:.9rem;line-height:1.75;color:var(--dim)}
 
-/* ANIMATIONS */
-.fade-up{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
-.fade-up.in{opacity:1;transform:translateY(0)}
+/* ─── DIVIDER ─── */
+.sec-divider{
+  font-family:'IBM Plex Mono',monospace;font-size:.62rem;
+  letter-spacing:.24em;text-transform:uppercase;color:var(--dim);
+  display:flex;align-items:center;gap:1rem;margin:3rem 0 2rem;
+}
+.sec-divider::after{content:'';flex:1;height:1px;background:var(--border)}
 
-/* FOOTER */
-footer{border-top:1px solid var(--border);padding:1.8rem 6%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.8rem;position:relative;z-index:1}
-footer p{font-family:'Space Mono',monospace;font-size:.68rem;color:var(--dim)}
+/* ─── FOOTER ─── */
+footer{
+  border-top:1px solid var(--border);padding:2rem 5%;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:.8rem;
+}
+footer p{font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:var(--dim)}
+footer a{color:var(--dim);text-decoration:none;transition:color .2s}
+footer a:hover{color:var(--accent)}
 
-/* MOBILE */
-@media(max-width:768px){
-  .nav-btns{gap:.4rem}
-  .nav-btn{font-size:.65rem;padding:.5rem .8rem}
-  .proj-grid{grid-template-columns:1fr}
-  .stats{gap:1.8rem}
-  .stack-row{flex-direction:column;gap:.4rem}
-  .stack-cat{min-width:unset}
-  .page-inner{padding:2rem 5% 5rem}
+/* ─── FADE IN ─── */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:translateY(0)}
+
+/* ─── MOBILE ─── */
+@media(max-width:860px){
+  .nav-links .nav-link:not(.nav-cta){display:none}
+  #hero .hero-name{font-size:clamp(3.8rem,18vw,7rem)}
+  .about-grid{grid-template-columns:1fr;gap:3rem}
+  .proj-card{padding:1.6rem 1.8rem}
+  .contact-grid{grid-template-columns:1fr;gap:2.5rem}
+  section{padding:5rem 5%}
+  .proj-head{flex-direction:column}
+}
+@media(max-width:560px){
+  .skills-tabs{gap:.25rem}
+  .skill-tab{font-size:.6rem;padding:.45rem .8rem}
+  .exp-card{padding:1.4rem 1.6rem}
 }
 </style>
 </head>
 <body>
-<div class="orb o1"></div>
-<div class="orb o2"></div>
 
-<nav>
-  <div class="logo" onclick="goTo('home')">RD<span>.dev</span></div>
-  <div class="nav-btns">
-    <button class="nav-btn" id="btn-experience" onclick="goTo('experience')">My Experience</button>
-    <button class="nav-btn" id="btn-projects" onclick="goTo('projects')">My Projects</button>
-    <button class="nav-btn" id="btn-publications" onclick="goTo('publications')">My Publications</button>
+<!-- ═══════════════ LOADER ═══════════════ -->
+<div id="loader">
+  <div class="loader-terminal">
+    <div class="lt-line"><span class="lt-prompt">$</span><span>portfolio --init rahul.daga</span></div>
+    <div class="lt-line"><span class="lt-prompt">↳</span><span>loading modules...</span></div>
+  </div>
+  <div class="loader-pct-row">
+    <span id="loader-num">0</span>
+    <span class="loader-pct-sym">%</span>
+  </div>
+  <div class="loader-bar-wrap"><div id="loader-bar"></div></div>
+  <div class="loader-label">INITIALIZING</div>
+</div>
+
+<!-- ═══════════════ NAV ═══════════════ -->
+<nav id="nav">
+  <a class="nav-logo" href="#hero">RD<span>.dev</span></a>
+  <div class="nav-links">
+    <a class="nav-link" href="#about">About</a>
+    <a class="nav-link" href="#skills">Skills</a>
+    <a class="nav-link" href="#projects">Projects</a>
+    <a class="nav-link" href="#experience">Experience</a>
+    <a class="nav-link" href="#research">Research</a>
+    <a class="nav-link nav-cta" href="mailto:rahul.0411.da@gmail.com">Get in Touch</a>
   </div>
 </nav>
 
-<div id="app">
+<!-- ═══════════════ HERO ═══════════════ -->
+<section id="hero" style="padding:0 5%">
+  <div style="max-width:1100px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding-top:calc(var(--nav-h) + 2rem)">
+    <p class="hero-greeting reveal">Hey, I'm</p>
+    <h1 class="hero-name reveal">Rahul Daga<span class="cursor"></span></h1>
+    <p class="hero-title reveal">ML Engineer &nbsp;·&nbsp; AI Research &nbsp;·&nbsp; ISRO &nbsp;·&nbsp; VIT Pune Graduate</p>
 
-<!-- ══════════════ HOME PAGE ══════════════ -->
-<div class="page active" id="home">
-  <div class="home-inner">
-    <div class="eyebrow">Machine Learning Engineer</div>
-    <h1>Rahul<span class="ghost">Daga.</span></h1>
-    <p class="summary">
-      Final-year IT student at <em>VIT Pune</em>, building intelligent systems at the intersection of 
-      <em>ML research</em> and real-world deployment. Currently at <em>ISRO</em> — applying deep learning 
-      to atmospheric science. Passionate about agentic AI, computer vision, LLM security, and 
-      data pipelines that solve real problems.
+    <p class="hero-bio reveal">
+      A graduate in Information Technology from <em>VIT Pune</em>, now channeling that foundation into
+      active research in AI and Machine Learning — a field he's been building in since his first year and
+      remains deeply passionate about. Currently at <em>ISRO</em> as an AI/ML intern, applying deep learning
+      to atmospheric science: training regression models on satellite radiance data from INSAT-3D/3DR to
+      retrieve thermodynamic indices that inform <em>severe weather forecasting</em> across the Indian subcontinent.
+    </p>
+    <p class="hero-bio reveal">
+      As an ML Engineer, his focus is the gap between research and production — building pipelines that are
+      not just accurate but <em>deployable, secure, and maintainable</em>. Going forward, he's drawn to
+      agentic AI systems and LLM infrastructure: how intelligent agents reason, act, and stay reliable in
+      the real world. Alongside that, <em>data pipelines and MLOps</em> — the scaffolding that makes ML
+      trustworthy at scale — are where he wants to push his craft next.
     </p>
 
-    <div class="stats">
-      <div><div class="stat-n">96<span class="a">%</span></div><div class="stat-l">Image Auth Accuracy</div></div>
-      <div><div class="stat-n">95<span class="a">%</span></div><div class="stat-l">NL→SQL Accuracy</div></div>
-      <div><div class="stat-n">10K<span class="a">+</span></div><div class="stat-l">Images Processed</div></div>
-      <div><div class="stat-n">7K<span class="a">+</span></div><div class="stat-l">Prompts Evaluated</div></div>
+    <div class="hero-actions reveal">
+      <a class="btn-primary" href="mailto:rahul.0411.da@gmail.com">Get in Touch</a>
+      <a class="btn-outline" href="#projects">View Projects</a>
     </div>
+    <div class="hero-socials reveal">
+      <a class="social-link" href="https://github.com/rahul02-dat" target="_blank">GitHub</a>
+      <a class="social-link" href="mailto:rahul.0411.da@gmail.com">Email</a>
+    </div>
+  </div>
+</section>
 
-    <div class="stack-title">Tech Stack</div>
-    <div class="stack-grid">
-      <div class="stack-row fade-up">
-        <span class="stack-cat">Languages</span>
-        <div class="chips">
-          <span class="chip hi">Python</span>
-          <span class="chip hi">JavaScript</span>
-          <span class="chip">SQL</span>
+<!-- ═══════════════ ABOUT ═══════════════ -->
+<section id="about">
+  <div style="max-width:1100px;margin:0 auto">
+    <p class="section-eyebrow reveal">About</p>
+    <h2 class="section-title reveal">Who I Am</h2>
+    <div class="about-grid">
+      <div class="about-left">
+        <p class="about-sub reveal">
+          A graduate in Information Technology from <em>VIT Pune</em>, now channeling that foundation into
+          active research in AI and Machine Learning — a field I've been building in since my first year and
+          remain deeply passionate about. Currently at <em>ISRO</em> as an AI/ML intern, applying deep learning
+          to atmospheric science: training regression models on satellite radiance data from INSAT-3D/3DR to
+          retrieve thermodynamic indices that inform <em>severe weather forecasting</em> across the Indian subcontinent.
+        </p>
+        <p class="about-sub reveal">
+          As an ML Engineer, my focus is the gap between research and production — building pipelines that are
+          not just accurate but <em>deployable, secure, and maintainable</em>. Going forward, I'm drawn to
+          agentic AI systems and LLM infrastructure: how intelligent agents reason, act, and stay reliable in
+          the real world. Alongside that, <em>data pipelines and MLOps</em> — the scaffolding that makes ML
+          trustworthy at scale — are where I want to push my craft next.
+        </p>
+        <div class="about-contacts reveal">
+          <div class="contact-row">
+            <span class="contact-label">Email</span>
+            <span class="contact-val"><a href="mailto:rahul.0411.da@gmail.com">rahul.0411.da@gmail.com</a></span>
+          </div>
+          <div class="contact-row">
+            <span class="contact-label">GitHub</span>
+            <span class="contact-val"><a href="https://github.com/rahul02-dat" target="_blank">github.com/rahul02-dat</a></span>
+          </div>
+          <div class="contact-row">
+            <span class="contact-label">Location</span>
+            <span class="contact-val">India</span>
+          </div>
+          <div class="contact-row">
+            <span class="contact-label">Education</span>
+            <span class="contact-val">B.Tech IT · VIT Pune · 2026</span>
+          </div>
         </div>
       </div>
-      <div class="stack-row fade-up">
-        <span class="stack-cat">ML / AI</span>
-        <div class="chips">
-          <span class="chip hi">TensorFlow</span>
-          <span class="chip">Scikit-Learn</span>
-          <span class="chip">OpenCV</span>
-          <span class="chip">NLP</span>
-          <span class="chip">MediaPipe</span>
-          <span class="chip">LLM Fine-Tuning</span>
-          <span class="chip">Prompt Engineering</span>
-        </div>
-      </div>
-      <div class="stack-row fade-up">
-        <span class="stack-cat">Backend</span>
-        <div class="chips">
-          <span class="chip hi">FastAPI</span>
-          <span class="chip">Flask</span>
+      <div class="about-right reveal">
+        <p class="core-label">Core Areas</p>
+        <div class="core-chips">
+          <span class="chip chip-hi">Machine Learning</span>
+          <span class="chip chip-hi">Agentic AI</span>
+          <span class="chip chip-hi">LLM Systems</span>
+          <span class="chip chip-red">LLM Security</span>
+          <span class="chip chip-red">Prompt Injection Defense</span>
+          <span class="chip chip-green">Computer Vision</span>
+          <span class="chip chip-green">Image Forensics</span>
+          <span class="chip chip-amber">Atmospheric ML</span>
+          <span class="chip chip-amber">ISRO Research</span>
+          <span class="chip">Data Pipelines</span>
+          <span class="chip">MLOps</span>
+          <span class="chip">RAG</span>
+          <span class="chip">FastAPI</span>
           <span class="chip">Docker</span>
-          <span class="chip">Streamlit</span>
+          <span class="chip">Edge AI</span>
         </div>
-      </div>
-      <div class="stack-row fade-up">
-        <span class="stack-cat">Data</span>
-        <div class="chips">
-          <span class="chip hi">NumPy</span>
-          <span class="chip hi">Pandas</span>
-          <span class="chip">SciPy</span>
-          <span class="chip">Matplotlib</span>
-          <span class="chip">NetCDF / HDF5</span>
-        </div>
-      </div>
-      <div class="stack-row fade-up">
-        <span class="stack-cat">Databases</span>
-        <div class="chips">
-          <span class="chip hi">MySQL</span>
-          <span class="chip">Supabase</span>
-          <span class="chip">SQLite</span>
-          <span class="chip">PostgreSQL</span>
-        </div>
-      </div>
-      <div class="stack-row fade-up">
-        <span class="stack-cat">Tools</span>
-        <div class="chips">
-          <span class="chip hi">Git / GitHub</span>
-          <span class="chip">Unix / macOS</span>
-          <span class="chip">Jupyter</span>
-          <span class="chip">XCode</span>
+
+        <p class="core-label" style="margin-top:2.5rem">Education</p>
+        <div style="display:flex;flex-direction:column;gap:1rem">
+          <div class="cert-card">
+            <div class="cert-issuer">Vishwakarma Institute of Technology</div>
+            <div class="cert-name">B.Tech — Information Technology</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--dim);margin-top:.4rem">Oct 2022 – Jun 2026 · Pune, Maharashtra</div>
+          </div>
         </div>
       </div>
     </div>
   </div>
+</section>
 
-  <footer>
-    <p>© 2025 Rahul Daga</p>
-    <p>B.Tech IT · VIT Pune · 2026</p>
-    <p>rahul.0411.da@gmail.com</p>
-  </footer>
-</div>
-
-<!-- ══════════════ EXPERIENCE PAGE ══════════════ -->
-<div class="page" id="experience">
-  <div class="page-inner">
-    <div class="page-header fade-up">
-      <div class="page-num">01 / Experience</div>
-      <div class="page-title">Where I've Worked</div>
-      <div class="page-sub">Research · Engineering · Real-world ML deployment</div>
+<!-- ═══════════════ SKILLS ═══════════════ -->
+<section id="skills">
+  <div style="max-width:1100px;margin:0 auto">
+    <p class="section-eyebrow reveal">Skills</p>
+    <h2 class="section-title reveal">Tech Stack</h2>
+    <div class="skills-tabs reveal">
+      <button class="skill-tab active" data-tab="lang">Languages</button>
+      <button class="skill-tab" data-tab="ml">ML / AI</button>
+      <button class="skill-tab" data-tab="sec">Security</button>
+      <button class="skill-tab" data-tab="backend">Backend</button>
+      <button class="skill-tab" data-tab="data">Data</button>
+      <button class="skill-tab" data-tab="tools">Tools</button>
     </div>
+    <div id="tab-lang" class="skill-panel active reveal">
+      <span class="chip chip-hi">Python</span>
+      <span class="chip chip-hi">JavaScript</span>
+      <span class="chip">SQL</span>
+    </div>
+    <div id="tab-ml" class="skill-panel reveal">
+      <span class="chip chip-hi">TensorFlow</span>
+      <span class="chip chip-hi">PyTorch</span>
+      <span class="chip">Scikit-Learn</span>
+      <span class="chip">OpenCV</span>
+      <span class="chip">MediaPipe</span>
+      <span class="chip">NLP</span>
+      <span class="chip">LangGraph</span>
+      <span class="chip">LangChain</span>
+      <span class="chip">LLM Fine-Tuning</span>
+      <span class="chip">Prompt Engineering</span>
+      <span class="chip">RAG</span>
+      <span class="chip">Ollama</span>
+      <span class="chip">EfficientNet</span>
+    </div>
+    <div id="tab-sec" class="skill-panel reveal">
+      <span class="chip chip-red">Prompt Injection Defense</span>
+      <span class="chip chip-red">HOUYI Pattern Detection</span>
+      <span class="chip chip-red">SHA-256 / EXIF Forensics</span>
+      <span class="chip chip-red">IPS / IDS</span>
+      <span class="chip chip-red">Threat Intelligence</span>
+      <span class="chip chip-red">Semantic Threat Analysis</span>
+    </div>
+    <div id="tab-backend" class="skill-panel reveal">
+      <span class="chip chip-hi">FastAPI</span>
+      <span class="chip">Flask</span>
+      <span class="chip">Docker</span>
+      <span class="chip">Streamlit</span>
+      <span class="chip">uvicorn</span>
+    </div>
+    <div id="tab-data" class="skill-panel reveal">
+      <span class="chip chip-hi">NumPy</span>
+      <span class="chip chip-hi">Pandas</span>
+      <span class="chip">SciPy</span>
+      <span class="chip">Matplotlib</span>
+      <span class="chip">NetCDF / HDF5</span>
+      <span class="chip">ChromaDB</span>
+      <span class="chip">MySQL</span>
+      <span class="chip">SQLite</span>
+      <span class="chip">Supabase</span>
+      <span class="chip">PostgreSQL</span>
+    </div>
+    <div id="tab-tools" class="skill-panel reveal">
+      <span class="chip chip-hi">Git / GitHub</span>
+      <span class="chip">Unix / macOS</span>
+      <span class="chip">Jupyter</span>
+      <span class="chip">Raspberry Pi</span>
+      <span class="chip">Tesseract OCR</span>
+      <span class="chip">XCode</span>
+    </div>
+  </div>
+</section>
 
+<!-- ═══════════════ PROJECTS ═══════════════ -->
+<section id="projects">
+  <div class="projects-inner">
+    <p class="section-eyebrow reveal">Projects</p>
+    <h2 class="section-title reveal">Things I've Built</h2>
+  </div>
+
+  <div class="ticker-wrap">
+    <div class="ticker-track">
+      <span class="ticker-item">SEE WHAT I BUILT <span>·</span></span>
+      <span class="ticker-item">ML PIPELINES <span>·</span></span>
+      <span class="ticker-item">LLM SECURITY <span>·</span></span>
+      <span class="ticker-item">AGENTIC AI <span>·</span></span>
+      <span class="ticker-item">COMPUTER VISION <span>·</span></span>
+      <span class="ticker-item">EDGE COMPUTING <span>·</span></span>
+      <span class="ticker-item">IEEE PUBLISHED <span>·</span></span>
+      <span class="ticker-item">SEE WHAT I BUILT <span>·</span></span>
+      <span class="ticker-item">ML PIPELINES <span>·</span></span>
+      <span class="ticker-item">LLM SECURITY <span>·</span></span>
+      <span class="ticker-item">AGENTIC AI <span>·</span></span>
+      <span class="ticker-item">COMPUTER VISION <span>·</span></span>
+      <span class="ticker-item">EDGE COMPUTING <span>·</span></span>
+      <span class="ticker-item">IEEE PUBLISHED <span>·</span></span>
+    </div>
+  </div>
+
+  <div class="projects-inner">
+    <div class="proj-list">
+
+      <!-- 001 DataPrepX -->
+      <div class="proj-card ml reveal">
+        <div class="proj-head">
+          <div class="proj-meta">
+            <p class="proj-num">PROJECT / 001</p>
+            <h3 class="proj-name">DataPrepX — AI Data Handler</h3>
+            <p class="proj-metric">90% accuracy &nbsp;·&nbsp; 70% manual effort reduction</p>
+          </div>
+          <span class="proj-type-badge">ML Pipeline</span>
+        </div>
+        <ul class="proj-pts">
+          <li>Automated detection of data quality issues — <strong>missing values, inconsistent types, and outliers</strong> — across diverse dataset formats using intelligent heuristic analysis.</li>
+          <li>AI-assisted preprocessing engine recommends or performs preparation operations automatically; modular <strong>YAML/JSON pipeline configuration</strong> enables reusable, reproducible workflows across projects.</li>
+          <li>Adaptive model selection across <strong>7 regression and classification models</strong>, choosing the best fit based on dataset characteristics — eliminating manual model hunting.</li>
+          <li>Full ETL pipeline covering loading, cleaning, transforming, and export stages with an integrated unit test suite ensuring reliability at each transformation step.</li>
+          <li>Interactive <strong>Streamlit UI</strong> with real-time pipeline visualization; benchmarks showed 70% reduction in manual data preparation time versus ad-hoc scripting.</li>
+        </ul>
+        <div class="proj-stack">
+          <span class="chip chip-hi">Python</span>
+          <span class="chip">FastAPI</span>
+          <span class="chip">TensorFlow</span>
+          <span class="chip">Scikit-Learn</span>
+          <span class="chip">Streamlit</span>
+          <span class="chip">Pandas · NumPy</span>
+        </div>
+      </div>
+
+      <!-- 002 NL-SQL -->
+      <div class="proj-card sec reveal">
+        <div class="proj-head">
+          <div class="proj-meta">
+            <p class="proj-num">PROJECT / 002</p>
+            <h3 class="proj-name">NL-SQL — Natural Language → SQL Agent</h3>
+            <p class="proj-metric">95.34% query accuracy &nbsp;·&nbsp; 15+ security rules</p>
+          </div>
+          <span class="proj-type-badge">Agentic · Security</span>
+        </div>
+        <ul class="proj-pts">
+          <li>Locally-running agentic pipeline translating plain-English questions into safe, read-only SQL using a <strong>Qwen-coder (20B) LLM</strong> via Ollama — no external API, fully air-gapped.</li>
+          <li>Multi-layer security gate enforces <strong>15+ rules</strong> before any query is generated: input validation, SQL injection detection, prompt injection blocking, and operation policy (INSERT/UPDATE/DELETE/DROP are rejected entirely).</li>
+          <li><strong>Three-agent pipeline</strong>: Intent Agent classifies queries (VALID / INCOMPLETE / DISALLOWED), SQL Agent generates schema-aware SELECT statements from live schema introspection, Insight Agent converts raw results into plain-English analysis.</li>
+          <li>Self-healing mechanism — if a generated query errors at runtime, the LLM automatically attempts a corrected fix before surfacing the failure to the user.</li>
+          <li>Achieved <strong>95.34% query accuracy</strong> across diverse natural language styles; full timestamped security audit trail and structured insight logs.</li>
+        </ul>
+        <div class="proj-stack">
+          <span class="chip chip-red">Python</span>
+          <span class="chip">SQLite</span>
+          <span class="chip">Ollama (Qwen-coder)</span>
+          <span class="chip">LLM Agents</span>
+          <span class="chip">SQL Security</span>
+        </div>
+      </div>
+
+      <!-- 003 PromptWall -->
+      <div class="proj-card sec reveal">
+        <div class="proj-head">
+          <div class="proj-meta">
+            <p class="proj-num">PROJECT / 003</p>
+            <h3 class="proj-name">PromptWall — LLM Security Gateway</h3>
+            <p class="proj-metric">89.34% detection &nbsp;·&nbsp; 7,000+ labeled samples</p>
+          </div>
+          <span class="proj-type-badge">LLM Security</span>
+        </div>
+        <ul class="proj-pts">
+          <li>Multi-layered security gateway intercepting untrusted inputs (URLs, documents, user text) before they reach an LLM agent — covering prompt injection, data exfiltration, agentic intent abuse, and <strong>HOUYI-style context manipulation</strong>.</li>
+          <li><strong>8+ specialized detectors</strong> run in parallel: IntentClassifier, HOUYIPatternDetector, SemanticThreatDetector (embedding similarity), PromptInjectionDetector, AgenticIntentDetector, ExfiltrationDetector, HiddenContentAnalyzer, and ContentDeobfuscator (Base64/hex/URL, up to 3 layers deep).</li>
+          <li>Weighted risk scoring produces one of four decisions — <strong>ALLOW / SANITIZE / REQUIRE_APPROVAL / BLOCK</strong> — with thresholds fully configurable in YAML; critical safety overrides always fire regardless of score.</li>
+          <li>Optional ML override layer (RandomForest / XGBoost) trained on labeled samples; OCR content analyzer (Tesseract) extracts and inspects text embedded inside uploaded images.</li>
+          <li>Evaluated on <strong>7,000+ labeled prompt samples</strong> achieving 89.34% attack detection with low false-positive rates on legitimate inputs.</li>
+        </ul>
+        <div class="proj-stack">
+          <span class="chip chip-red">Python</span>
+          <span class="chip">Scikit-Learn · XGBoost</span>
+          <span class="chip">sentence-transformers</span>
+          <span class="chip">Tesseract OCR</span>
+          <span class="chip">PyYAML</span>
+        </div>
+      </div>
+
+      <!-- 004 Multi-Agent IPS -->
+      <div class="proj-card sec reveal">
+        <div class="proj-head">
+          <div class="proj-meta">
+            <p class="proj-num">PROJECT / 004</p>
+            <h3 class="proj-name">Autonomous Multi-Agent Threat Intelligence IPS</h3>
+            <p class="proj-metric">Air-gapped &nbsp;·&nbsp; RAG-grounded &nbsp;·&nbsp; Zero hallucination</p>
+          </div>
+          <span class="proj-type-badge">Multi-Agent · IPS</span>
+        </div>
+        <ul class="proj-pts">
+          <li>Air-gapped <strong>Intrusion Prevention System</strong> eliminating SOC alert fatigue through a two-tier architecture: fast heuristic triage plus deep LLM-powered threat reasoning.</li>
+          <li>High-speed <strong>Watchdog filter</strong> processes raw network logs, discards benign events instantly, and routes anomalies to the adversarial AI swarm — preventing LLM compute waste on obvious noise.</li>
+          <li><strong>LangGraph-orchestrated adversarial swarm</strong>: Analyst agent proposes threat theory, Critic acts as Red Team Devil's Advocate arguing the benign explanation, Judge arbitrates and generates active Bash/firewall mitigation scripts.</li>
+          <li>All agent reasoning strictly grounded by a <strong>ChromaDB vector store</strong> containing textbook threat intelligence — eliminating hallucinations in security-critical decisions where false negatives have real cost.</li>
+          <li>Fully local Gemma models via Ollama; zero external API calls preserves network isolation in sensitive SOC environments.</li>
+        </ul>
+        <div class="proj-stack">
+          <span class="chip chip-red">Python</span>
+          <span class="chip">LangGraph · LangChain</span>
+          <span class="chip">ChromaDB (RAG)</span>
+          <span class="chip">Ollama (Gemma)</span>
+          <span class="chip">Network Security</span>
+        </div>
+      </div>
+
+      <!-- 005 Image Forensics -->
+      <div class="proj-card cv reveal">
+        <div class="proj-head">
+          <div class="proj-meta">
+            <p class="proj-num">PROJECT / 005</p>
+            <h3 class="proj-name">Forensic AI Image Detector</h3>
+            <p class="proj-metric">Real vs AI-generated &nbsp;·&nbsp; GradCAM &nbsp;·&nbsp; GenImage dataset</p>
+          </div>
+          <span class="proj-type-badge">Computer Vision</span>
+        </div>
+        <ul class="proj-pts">
+          <li>Dual-stream CNN classifying images as real photographs or AI-generated (GAN / Stable Diffusion / Midjourney), trained on the <strong>GenImage benchmark dataset</strong>.</li>
+          <li><strong>EfficientNet-B4 spatial stream</strong> processes RGB patterns while a parallel <strong>Patch-DCT frequency stream</strong> analyzes frequency-domain artifacts that generative models leave behind — invisible to the eye but detectable spectrally.</li>
+          <li><strong>GradCAM heatmap</strong> overlaid on input images highlights the exact spatial regions that triggered the AI-generated verdict, providing interpretability alongside the prediction.</li>
+          <li>Confidence score with animated meter; prediction history stores per-image thumbnails with individual delete controls for session management.</li>
+          <li>Dockerized FastAPI + uvicorn backend deployable to <strong>Hugging Face Spaces</strong>; handles arbitrary image uploads through a clean browser interface.</li>
+        </ul>
+        <div class="proj-stack">
+          <span class="chip chip-green">Python</span>
+          <span class="chip">EfficientNet-B4 · PyTorch</span>
+          <span class="chip">GradCAM</span>
+          <span class="chip">FastAPI · Docker</span>
+          <span class="chip">Hugging Face Spaces</span>
+        </div>
+      </div>
+
+      <!-- 006 Iris Recognition -->
+      <div class="proj-card cv reveal">
+        <div class="proj-head">
+          <div class="proj-meta">
+            <p class="proj-num">PROJECT / 006</p>
+            <h3 class="proj-name">Iris Recognition Automotive Security</h3>
+            <p class="proj-metric">2.5–3.5s recognition &nbsp;·&nbsp; KNN &nbsp;·&nbsp; IEEE ICESCI 2025</p>
+          </div>
+          <span class="proj-type-badge">IEEE Published</span>
+        </div>
+        <ul class="proj-pts">
+          <li>End-to-end iris biometric authentication system deployed on <strong>Raspberry Pi</strong> hardware for automotive access control — no cloud dependency, fully embedded edge device.</li>
+          <li>Pipeline covers iris image capture, segmentation with circular boundary detection, Daugman's rubber sheet normalization, Gabor filter feature extraction, and <strong>KNN classification</strong>.</li>
+          <li>Achieves <strong>2.5–3.5 second end-to-end</strong> recognition-to-unlock latency on resource-constrained hardware, demonstrating production viability for vehicle security.</li>
+          <li>Evaluated across diverse iris datasets covering varying lighting conditions, angles, and demographic variation; results confirm production-readiness without external infrastructure.</li>
+          <li>Peer-reviewed and <strong>published at IEEE ICESCI 2025</strong>, demonstrating feasibility of embedded biometric security as a standalone automotive access system.</li>
+        </ul>
+        <div class="proj-stack">
+          <span class="chip chip-green">Python</span>
+          <span class="chip">OpenCV</span>
+          <span class="chip">KNN · Scikit-Learn</span>
+          <span class="chip">Raspberry Pi</span>
+          <span class="chip">NumPy</span>
+        </div>
+      </div>
+
+      <!-- 007 ASCII Camera -->
+      <div class="proj-card misc reveal">
+        <div class="proj-head">
+          <div class="proj-meta">
+            <p class="proj-num">PROJECT / 007</p>
+            <h3 class="proj-name">ASCII Camera — Real-Time Webcam Renderer</h3>
+            <p class="proj-metric">30 FPS &nbsp;·&nbsp; 6 palettes &nbsp;·&nbsp; Multi-threaded</p>
+          </div>
+          <span class="proj-type-badge">Creative CV</span>
+        </div>
+        <ul class="proj-pts">
+          <li>Real-time webcam-to-ASCII art renderer running at up to <strong>30 FPS</strong> in a dedicated Tkinter GUI window with no noticeable frame flicker.</li>
+          <li>Multi-threaded: background <strong>CaptureThread</strong> reads webcam frames, converts to grayscale, and maps pixels to ASCII characters via a vectorized <strong>NumPy lookup table</strong> — all off the UI thread.</li>
+          <li>Main-thread Tkinter loop updates the text widget in-place every ~33ms; FPS counter updates live alongside the ASCII grid for real-time throughput feedback.</li>
+          <li>Six selectable character palettes — standard, extended (70-char tonal gradient), Unicode blocks (░▒▓█), minimal, binary, and dots — switchable without restart.</li>
+          <li>Full CLI with adjustable columns, target FPS, camera device index, color thumbnail mode, and live keyboard shortcuts for zoom, color toggle, and quit.</li>
+        </ul>
+        <div class="proj-stack">
+          <span class="chip">Python</span>
+          <span class="chip">OpenCV</span>
+          <span class="chip">NumPy</span>
+          <span class="chip">Pillow</span>
+          <span class="chip">Tkinter</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ EXPERIENCE ═══════════════ -->
+<section id="experience">
+  <div style="max-width:1100px;margin:0 auto">
+    <p class="section-eyebrow reveal">Experience</p>
+    <h2 class="section-title reveal">Where I've Worked</h2>
     <div class="exp-list">
 
-      <div class="exp-card isro fade-up">
+      <div class="exp-card isro reveal">
         <div class="exp-top">
           <div class="exp-role">Research Intern — Machine Learning</div>
           <span class="badge badge-now">Current</span>
@@ -280,9 +916,9 @@ footer p{font-family:'Space Mono',monospace;font-size:.68rem;color:var(--dim)}
           <li>Exploring data augmentation for sparse radiosonde coverage over oceanic regions to reduce spatial biases in model training.</li>
           <li>Contributing to downstream severe weather nowcasting applications over the Indian subcontinent.</li>
         </ul>
-        <div class="exp-stack">
-          <span class="chip hi">Python</span>
-          <span class="chip hi">TensorFlow</span>
+        <div class="exp-chips">
+          <span class="chip chip-hi">Python</span>
+          <span class="chip chip-hi">TensorFlow</span>
           <span class="chip">NetCDF / HDF5</span>
           <span class="chip">NumPy / SciPy</span>
           <span class="chip">Satellite Remote Sensing</span>
@@ -290,7 +926,7 @@ footer p{font-family:'Space Mono',monospace;font-size:.68rem;color:var(--dim)}
         </div>
       </div>
 
-      <div class="exp-card archsoft fade-up">
+      <div class="exp-card archsoft reveal">
         <div class="exp-top">
           <div class="exp-role">Machine Learning Engineer Intern</div>
           <span class="badge badge-past">Jun – Sep 2025</span>
@@ -300,8 +936,8 @@ footer p{font-family:'Space Mono',monospace;font-size:.68rem;color:var(--dim)}
           <li>Designed a metadata analysis and extraction system for <strong>cryptographic fingerprints</strong> and EXIF-attribute analysis, enabling automated image authenticity and integrity assessment at <strong>96% accuracy</strong>.</li>
           <li>Evaluated 10,000+ images through a processing pipeline with SHA-256 hashing for duplication detection and AI-content evaluation for tampering artifacts and surface manipulation, with confidence-aware outputs.</li>
         </ul>
-        <div class="exp-stack">
-          <span class="chip hi">Python</span>
+        <div class="exp-chips">
+          <span class="chip chip-hi">Python</span>
           <span class="chip">FastAPI</span>
           <span class="chip">SHA-256 Hashing</span>
           <span class="chip">EXIF Analysis</span>
@@ -309,197 +945,202 @@ footer p{font-family:'Space Mono',monospace;font-size:.68rem;color:var(--dim)}
         </div>
       </div>
 
-    </div>
-
-    <div class="section-divider">Education</div>
-    <div class="exp-card fade-up" style="border-left:3px solid var(--accent);border-color:var(--border)">
-      <div class="exp-top">
-        <div class="exp-role">B.Tech — Information Technology</div>
-        <span class="badge badge-past">Oct 2022 – Jun 2026</span>
-      </div>
-      <div class="exp-org" style="color:var(--accent)">Vishwakarma Institute of Technology · Pune, Maharashtra</div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════ PROJECTS PAGE ══════════════ -->
-<div class="page" id="projects">
-  <div class="page-inner">
-    <div class="page-header fade-up">
-      <div class="page-num">02 / Projects</div>
-      <div class="page-title">Things I've Built</div>
-      <div class="page-sub">ML systems · Security research · Agentic AI · Computer Vision</div>
-    </div>
-
-    <div class="proj-grid">
-
-      <div class="proj-card fade-up">
-        <div class="proj-id">PROJECT / 001</div>
-        <div class="proj-name">DataPrepX — AI Data Handler</div>
-        <div class="proj-metric">90% accuracy · 70% manual reduction</div>
-        <p class="proj-desc">AI-driven data handling platform automating manual ETL workflows across diverse datasets. A data-aware orchestrated pipeline enforces adaptive model selection across 7 regression and classification models, improving analytical reliability.</p>
-        <div class="chips">
-          <span class="chip hi">Python</span><span class="chip">FastAPI</span><span class="chip">TensorFlow</span><span class="chip">Streamlit</span>
+      <div class="exp-card edu reveal">
+        <div class="exp-top">
+          <div class="exp-role">B.Tech — Information Technology</div>
+          <span class="badge badge-past">Oct 2022 – Jun 2026</span>
         </div>
-      </div>
-
-      <div class="proj-card fade-up">
-        <div class="proj-id">PROJECT / 002</div>
-        <div class="proj-name">SQL Automation Tool</div>
-        <div class="proj-metric">95.34% query accuracy</div>
-        <p class="proj-desc">End-to-end natural language-to-SQL engine using Qwen-coder:3 (20B) with schema-aware query generation and schema insight extraction. Includes a 15+ rule security enforcement layer preventing prompt injection, schema tampering, and unauthorized data manipulation.</p>
-        <div class="chips">
-          <span class="chip hi">Python</span><span class="chip">SQLite</span><span class="chip">Ollama</span><span class="chip">LLM</span>
-        </div>
-      </div>
-
-      <div class="proj-card fade-up">
-        <div class="proj-id">PROJECT / 003</div>
-        <div class="proj-name">Security Layer for Agentic AIs</div>
-        <div class="proj-metric">89.34% detection · 7,000+ samples</div>
-        <p class="proj-desc">Prompt injection security layer for custom agentic AI systems, using 20+ engineered features to detect known and zero-shot injection attacks. Evaluated on 7,000+ labeled prompt samples with model refinement and low false-positive rates on benign inputs.</p>
-        <div class="chips">
-          <span class="chip hi">Python</span><span class="chip">OCR</span><span class="chip">Machine Learning</span><span class="chip">NLP</span>
-        </div>
-      </div>
-
-      <div class="proj-card fade-up">
-        <div class="proj-id">PROJECT / 004</div>
-        <div class="proj-name">Multi-Agent Reinforcement Learning</div>
-        <div class="proj-metric">+5% mission success · 30% faster</div>
-        <p class="proj-desc">Framework where autonomous agents master cooperative strategies through shared reward pools. Achieved near-zero collisions in complex urban environments with measurably faster mission completion across distributed agent scenarios.</p>
-        <div class="chips">
-          <span class="chip hi">Python</span><span class="chip">Flask</span><span class="chip">Docker</span><span class="chip">RL</span>
-        </div>
-      </div>
-
-      <div class="proj-card fade-up">
-        <div class="proj-id">PROJECT / 005</div>
-        <div class="proj-name">AI Voice Interview Platform</div>
-        <div class="proj-metric">NLP · Sentiment · Auto-Feedback</div>
-        <p class="proj-desc">Intelligent interview platform using speech-to-text, NLP structural analysis, and sentiment detection. Delivers automated pedagogical feedback to candidates, improving preparation quality and evaluation consistency.</p>
-        <div class="chips">
-          <span class="chip hi">OpenAI</span><span class="chip">NLP</span><span class="chip">Supabase</span><span class="chip">Clerk</span>
-        </div>
-      </div>
-
-      <div class="proj-card fade-up">
-        <div class="proj-id">PROJECT / 006</div>
-        <div class="proj-name">Iris Recognition Security System</div>
-        <div class="proj-metric">2.5–3.5s recognition · KNN</div>
-        <p class="proj-desc">Automotive security system using iris biometrics on Raspberry Pi. End-to-end pipeline from image capture to KNN classification. Directly led to a published paper at IEEE ICESCI 2025.</p>
-        <div class="chips">
-          <span class="chip hi">Python</span><span class="chip">OpenCV</span><span class="chip">Raspberry Pi</span><span class="chip">KNN</span>
-        </div>
+        <div class="exp-org">Vishwakarma Institute of Technology · Pune, Maharashtra</div>
       </div>
 
     </div>
   </div>
-</div>
+</section>
 
-<!-- ══════════════ PUBLICATIONS PAGE ══════════════ -->
-<div class="page" id="publications">
-  <div class="page-inner">
-    <div class="page-header fade-up">
-      <div class="page-num">03 / Publications</div>
-      <div class="page-title">Research & Certifications</div>
-      <div class="page-sub">Peer-reviewed work · IEEE · IBM · Microsoft</div>
-    </div>
+<!-- ═══════════════ RESEARCH ═══════════════ -->
+<section id="research">
+  <div class="research-inner" style="max-width:1100px;margin:0 auto">
+    <p class="section-eyebrow reveal">Research</p>
+    <h2 class="section-title reveal">Publications & Certifications</h2>
 
-    <div class="pub-list">
-      <div class="pub-card fade-up">
-        <div class="pub-venue">IEEE ICESCI 2025 · Peer-Reviewed Conference Paper</div>
-        <div class="pub-title">Securing Automotive Using Iris Recognition</div>
-        <p class="pub-body">
-          Presents an end-to-end iris biometric authentication system designed for automotive security, implemented on Raspberry Pi hardware. The pipeline covers iris capture, segmentation, feature extraction, and KNN-based classification — achieving 2.5–3.5 second recognition and unlock speeds. Demonstrates feasibility of embedded biometric security for vehicle access control without cloud dependency.
-        </p>
-        <div class="pub-tags">
-          <span class="chip hi">Biometrics</span>
-          <span class="chip">Computer Vision</span>
-          <span class="chip">KNN</span>
-          <span class="chip">Raspberry Pi</span>
-          <span class="chip">Automotive Security</span>
-        </div>
+    <div class="pub-card reveal">
+      <div class="pub-venue">IEEE ICESCI 2025 · Peer-Reviewed Conference Paper</div>
+      <div class="pub-title">Securing Automotive Using Iris Recognition</div>
+      <p class="pub-body">
+        Presents an end-to-end iris biometric authentication system designed for automotive security, implemented on Raspberry Pi hardware. The pipeline covers iris capture, segmentation, feature extraction, and KNN-based classification — achieving 2.5–3.5 second recognition and unlock speeds. Demonstrates feasibility of embedded biometric security for vehicle access control without cloud dependency.
+      </p>
+      <div class="pub-tags">
+        <span class="chip chip-green">Biometrics</span>
+        <span class="chip">Computer Vision</span>
+        <span class="chip">KNN</span>
+        <span class="chip">Raspberry Pi</span>
+        <span class="chip">Automotive Security</span>
       </div>
     </div>
 
-    <div class="section-divider">Certifications</div>
+    <div class="sec-divider reveal">Certifications</div>
     <div class="cert-grid">
-      <div class="cert-card fade-up">
+      <div class="cert-card reveal">
         <div class="cert-issuer">IBM</div>
         <div class="cert-name">Python for Data Science, AI and Development</div>
       </div>
-      <div class="cert-card fade-up">
+      <div class="cert-card reveal">
         <div class="cert-issuer">IBM</div>
         <div class="cert-name">Developing AI Applications with Python and Flask</div>
       </div>
-      <div class="cert-card fade-up">
+      <div class="cert-card reveal">
         <div class="cert-issuer">Microsoft</div>
         <div class="cert-name">Generative AI</div>
       </div>
-      <div class="cert-card fade-up">
+      <div class="cert-card reveal">
         <div class="cert-issuer">Microsoft</div>
         <div class="cert-name">Azure AI Essentials</div>
       </div>
     </div>
   </div>
-</div>
+</section>
 
-</div><!-- #app -->
+<!-- ═══════════════ CONTACT ═══════════════ -->
+<section id="contact">
+  <div style="max-width:1100px;margin:0 auto">
+    <p class="section-eyebrow reveal">Contact</p>
+    <h2 class="section-title reveal">Get In Touch</h2>
+    <div class="contact-grid">
+      <div>
+        <p class="contact-group-label">Contact Info</p>
+        <div class="contact-info-list">
+          <div class="ci-row reveal">
+            <span class="ci-key">Email</span>
+            <span class="ci-val"><a href="mailto:rahul.0411.da@gmail.com">rahul.0411.da@gmail.com</a></span>
+          </div>
+          <div class="ci-row reveal">
+            <span class="ci-key">GitHub</span>
+            <span class="ci-val"><a href="https://github.com/rahul02-dat" target="_blank">github.com/rahul02-dat</a></span>
+          </div>
+          <div class="ci-row reveal">
+            <span class="ci-key">Location</span>
+            <span class="ci-val">India</span>
+          </div>
+        </div>
+        <div class="contact-links" style="margin-top:2rem">
+          <a class="contact-link-row reveal" href="https://github.com/rahul02-dat" target="_blank">
+            <span class="cli-icon">⌥</span>
+            <span>github.com/rahul02-dat</span>
+          </a>
+          <a class="contact-link-row reveal" href="mailto:rahul.0411.da@gmail.com">
+            <span class="cli-icon">✉</span>
+            <span>rahul.0411.da@gmail.com</span>
+          </a>
+        </div>
+      </div>
+      <div class="contact-right">
+        <div class="contact-card reveal">
+          <div class="contact-card-title">Open To</div>
+          <div class="contact-card-body">
+            Actively exploring opportunities in ML engineering, AI research, and agentic systems. 
+            Especially interested in teams working on LLM infrastructure, data pipelines, or applied ML at scale.
+          </div>
+        </div>
+        <div class="contact-card reveal">
+          <div class="contact-card-title">Current Focus</div>
+          <div class="contact-card-body">
+            Deep learning research at ISRO — atmospheric stability index retrieval from satellite radiance data. 
+            Building production-ready ML systems in parallel.
+          </div>
+        </div>
+        <div class="contact-card reveal">
+          <div class="contact-card-title">IEEE Publication</div>
+          <div class="contact-card-body">
+            "Securing Automotive Using Iris Recognition" — IEEE ICESCI 2025. Peer-reviewed research on embedded biometric security.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer>
+  <p>© 2025 Rahul Daga</p>
+  <p>B.Tech IT · VIT Pune · Graduate 2026</p>
+  <div style="display:flex;gap:1.2rem">
+    <a href="mailto:rahul.0411.da@gmail.com">Email</a>
+    <a href="https://github.com/rahul02-dat" target="_blank">GitHub</a>
+  </div>
+</footer>
 
 <script>
-const pages = ['home','experience','projects','publications'];
-const navBtns = {
-  experience: document.getElementById('btn-experience'),
-  projects:   document.getElementById('btn-projects'),
-  publications: document.getElementById('btn-publications')
-};
+/* ── LOADER ── */
+(function(){
+  let pct=0;
+  const num=document.getElementById('loader-num');
+  const bar=document.getElementById('loader-bar');
+  const step=()=>{
+    pct+=Math.floor(Math.random()*9)+2;
+    if(pct>=100){
+      pct=100;num.textContent=pct;bar.style.width='100%';
+      setTimeout(()=>{
+        document.getElementById('loader').classList.add('done');
+        document.body.classList.add('loaded');
+        initReveal();
+      },420);
+      return;
+    }
+    num.textContent=pct;bar.style.width=pct+'%';
+    setTimeout(step,28+Math.random()*30);
+  };
+  step();
+})();
 
-function goTo(id) {
-  // Deactivate all
-  pages.forEach(p => {
-    const el = document.getElementById(p);
-    el.classList.remove('active');
+/* ── NAV SCROLL ── */
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('scrolled',window.scrollY>40);
+  updateActiveNav();
+},{passive:true});
+
+/* ── ACTIVE NAV ── */
+function updateActiveNav(){
+  const links=document.querySelectorAll('.nav-link:not(.nav-cta)');
+  const sections=document.querySelectorAll('section[id]');
+  let current='';
+  sections.forEach(s=>{
+    if(window.scrollY>=s.offsetTop-120) current=s.id;
   });
-  Object.values(navBtns).forEach(b => b && b.classList.remove('active'));
-
-  // Activate target
-  const target = document.getElementById(id);
-  // Slight delay so the fade-out registers before fade-in
-  requestAnimationFrame(() => {
-    target.classList.add('active');
-    window.scrollTo({top: 0, behavior: 'smooth'});
+  links.forEach(l=>{
+    l.classList.toggle('active',l.getAttribute('href')==='#'+current);
   });
-
-  if (navBtns[id]) navBtns[id].classList.add('active');
-  history.pushState({page: id}, '', id === 'home' ? '/' : '#' + id);
-
-  // Trigger fade-up animations on newly visible page
-  setTimeout(() => triggerFades(target), 80);
 }
 
-function triggerFades(container) {
-  const els = container.querySelectorAll('.fade-up');
-  els.forEach((el, i) => {
-    el.classList.remove('in');
-    setTimeout(() => el.classList.add('in'), i * 60);
-  });
+/* ── REVEAL ON SCROLL ── */
+function initReveal(){
+  const els=document.querySelectorAll('.reveal');
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach((e,i)=>{
+      if(e.isIntersecting){
+        setTimeout(()=>e.target.classList.add('in'),i*45);
+        obs.unobserve(e.target);
+      }
+    });
+  },{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+  els.forEach(el=>obs.observe(el));
 }
 
-// Handle back/forward
-window.addEventListener('popstate', (e) => {
-  const id = (e.state && e.state.page) ? e.state.page : 'home';
-  goTo(id);
+/* ── SKILL TABS ── */
+document.querySelectorAll('.skill-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.skill-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.skill-panel').forEach(p=>p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('tab-'+tab.dataset.tab).classList.add('active');
+  });
 });
 
-// Init: trigger home animations on load
-window.addEventListener('DOMContentLoaded', () => {
-  const home = document.getElementById('home');
-  triggerFades(home);
-
-  // Handle direct URL hash
-  const hash = location.hash.replace('#', '');
-  if (hash && pages.includes(hash)) goTo(hash);
+/* ── SMOOTH SCROLL ── */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const target=document.querySelector(a.getAttribute('href'));
+    if(target){e.preventDefault();target.scrollIntoView({behavior:'smooth',block:'start'})}
+  });
 });
 </script>
 </body>
