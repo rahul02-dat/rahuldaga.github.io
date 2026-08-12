@@ -4,7 +4,6 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { ParticleNetwork } from "@/components/particle-network";
 import { UfoCursor } from "@/components/ufo-cursor";
 import { Socials } from "@/components/socials";
-import { EmailSide } from "@/components/email-side";
 
 export const metadata: Metadata = {
   title: "Rahul Daga — ML Engineer",
@@ -32,7 +31,6 @@ export default function RootLayout({
           <UfoCursor />
           <ParticleNetwork />
           <Socials />
-          <EmailSide />
           {children}
         </ThemeProvider>
       </body>

@@ -41,6 +41,16 @@ export function Socials() {
           <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
         </svg>
       </a>
+      <a
+        href={`mailto:${profile.email}`}
+        aria-label="Email"
+        className="text-[var(--dim)] hover:text-[var(--accent)] hover:-translate-y-1 transition-all duration-300"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+      </a>
     </div>
   );
 }
