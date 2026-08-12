@@ -68,7 +68,7 @@ export function UfoCursor() {
 }
 
 function PixelUfo() {
-  const pixelSize = 1.5; // Scale the pixel art
+  const pixelSize = 1.2; // Scale the pixel art
   const grid = [
     "      4444      ",
     "     444444     ",
