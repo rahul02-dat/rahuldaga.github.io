@@ -62,9 +62,50 @@ export function UfoCursor() {
       className="fixed top-0 left-0 pointer-events-none z-[9999]"
       style={{ willChange: "transform" }}
     >
-      <div className="relative flex flex-col items-center">
-        <span className="text-xl">🛸</span>
-      </div>
+      <PixelUfo />
     </div>
+  );
+}
+
+function PixelUfo() {
+  const pixelSize = 1.8; // Scale the pixel art
+  const grid = [
+    "      4444      ",
+    "     444444     ",
+    "    44444444    ",
+    "  111111111111  ",
+    " 11111111111111 ",
+    "1011011011011011",
+    " 11111111111111 "
+  ];
+
+  const colors: Record<string, string> = {
+    "1": "#9ca3af", // Gray body
+    "4": "#7dd3fc", // Blue dome
+    "0": "#fef08a", // Yellow lights
+    "2": "#60a5fa", // Blue thrust
+  };
+
+  const width = grid[0].length * pixelSize;
+  const height = grid.length * pixelSize;
+
+  return (
+    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
+      {grid.map((row, y) =>
+        row.split("").map((char, x) => {
+          if (char === " ") return null;
+          return (
+            <rect
+              key={`${x}-${y}`}
+              x={x * pixelSize}
+              y={y * pixelSize}
+              width={pixelSize}
+              height={pixelSize}
+              fill={colors[char]}
+            />
+          );
+        })
+      )}
+    </svg>
   );
 }
