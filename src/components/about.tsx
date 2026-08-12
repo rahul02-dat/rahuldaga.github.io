@@ -25,16 +25,7 @@ export function About() {
             ))}
             <Reveal>
               <div className="mt-8 flex flex-wrap justify-center gap-x-8 gap-y-4">
-                <ContactRow label="Email">
-                  <a href={`mailto:${profile.email}`} className="text-[var(--accent)] hover:underline">
-                    {profile.email}
-                  </a>
-                </ContactRow>
-                <ContactRow label="GitHub">
-                  <a href={profile.github} target="_blank" rel="noreferrer" className="text-[var(--accent)] hover:underline">
-                    github.com/rahul02-dat
-                  </a>
-                </ContactRow>
+
                 <ContactRow label="Location">{profile.location}</ContactRow>
               </div>
             </Reveal>

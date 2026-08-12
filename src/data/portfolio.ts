@@ -6,7 +6,7 @@ export const profile = {
   location: "Somehwere",
   education: "B.Tech IT · VIT Pune · 2026",
   bioParagraphs: [
-    "I am an engineer with a deep interest in AI and Machine Learning fields. My core skill: I think, I research, I build."
+    "I am an engineer with a deep interest in AI and Machine Learning fields. My core skill: I think, I research, I build. I deliver real-world solutions, automated workflows and measurable business outcomes. In my career of engineering I have worked on RAG systems, Data Engineering, Development of Agentic systems and workflows and learned failure mode debugging from deploying workflows to production."
   ],
   interests: [
     { label: "Coding", desc: "I Develop" },
