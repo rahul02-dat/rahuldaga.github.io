@@ -51,6 +51,12 @@ export const skillTabs = [
       { name: "Flask", icon: "flask", tone: "default" },
       { name: "GraphQL", icon: "graphql", tone: "default" },
       { name: "TailwindCSS", icon: "tailwindcss", tone: "default" },
+    ],
+  },
+  {
+    id: "databases",
+    label: "Databases",
+    skills: [
       { name: "SQL", icon: "mysql", tone: "default" },
       { name: "PostgreSQL", icon: "postgresql", tone: "default" },
       { name: "MongoDB", icon: "mongodb", tone: "default" },
@@ -80,7 +86,6 @@ export const skillTabs = [
       { name: "Docker", icon: "docker", tone: "default" },
       { name: "Kubernetes", icon: "kubernetes", tone: "default" },
       { name: "Google Cloud", icon: "googlecloud", tone: "default" },
-      { name: "AWS", icon: "amazonaws", tone: "default" },
       { name: "Linux", icon: "linux", tone: "default" },
       { name: "Unix / macOS", icon: "apple", tone: "default" },
       { name: "Streamlit", icon: "streamlit", tone: "default" },
