@@ -8,7 +8,7 @@ import { SectionHeading } from "./section-heading";
 import { useTheme } from "./theme-provider";
 
 export function Skills() {
-  const [active, setActive] = useState<(typeof skillTabs)[number]["id"]>(skillTabs[0].id);
+  const [active, setActive] = useState<(typeof skillTabs)[number]["id"] | null>(null);
   const [showContent, setShowContent] = useState(false);
   const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -17,7 +17,7 @@ export function Skills() {
     setMounted(true);
   }, []);
 
-  const activeTab = skillTabs.find((t) => t.id === active) ?? skillTabs[0];
+  const activeTab = skillTabs.find((t) => t.id === active);
   const iconColor = !mounted ? "" : theme === "light" ? "111827" : "f3f4f6";
 
   return (
@@ -44,7 +44,7 @@ export function Skills() {
         </Reveal>
         <Reveal>
           <div className="flex justify-center flex-wrap gap-4 mt-2">
-            {activeTab.skills.map((skill, index) => (
+            {activeTab && activeTab.skills.map((skill, index) => (
               <div
                 key={`${active}-${skill.name}`}
                 title={skill.name}
