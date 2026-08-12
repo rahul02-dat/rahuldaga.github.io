@@ -214,12 +214,14 @@ export const publications = [
     title: "Securing Automotive Using Iris Recognition",
     body: "Presents an end-to-end iris biometric authentication system designed for automotive security, implemented on Raspberry Pi hardware. The pipeline covers iris capture, segmentation, feature extraction, and KNN-based classification — achieving 2.5–3.5 second recognition and unlock speeds. Demonstrates feasibility of embedded biometric security for vehicle access control without cloud dependency.",
     tags: ["Biometrics", "Computer Vision", "KNN", "Raspberry Pi", "Automotive Security"],
+    link: "https://ieeexplore.ieee.org/document/10988056",
   },
   {
     venue: "GRENZE International Journal of Engineering and Technology · 2025",
     title: "Online Vocal Interviewer: based on AI for Candidate Response Analysis and Evaluation",
     body: "This paper presents an implementation of an AI-powered Voice-Based interviewer. It includes dynamic generation of interview questions from a given job profile description, conversational interaction in real time, and a scoring system via Sentiment Analysis based on structural coherence and content relevance. A web dashboard aggregates the scoring and statistics with a summary of the whole interview. The core tech stack used for this project is Next.js, Supabase, and Retell AI. For sentiment analysis, the OpenAI API is orchestrated through the LangChain framework.",
     tags: ["Voice AI", "Next.js", "Supabase", "Retell AI", "LangChain", "OpenAI"],
+    link: "https://drive.google.com/file/d/1a-KH-cm5O2PHuekEGZmbp6MbnDnAKuIP/view?usp=sharing",
   },
 ];
 

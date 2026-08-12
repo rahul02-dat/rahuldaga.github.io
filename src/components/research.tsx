@@ -13,9 +13,10 @@ export function Research() {
       <div className="max-w-[1300px] mx-auto flex flex-col items-center">
         <SectionHeading eyebrow="Research" title="Publications & Certifications" onComplete={() => setShowContent(true)} />
         <div className={`w-full flex flex-col items-center transition-opacity duration-700 ease-in-out ${showContent ? 'opacity-100' : 'opacity-0'}`}>
-        {publications.map((pub) => (
-          <Reveal key={pub.title}>
-            <div className="border border-[var(--border)] border-t-[3px] border-t-[var(--red)] rounded-md px-10 py-9 bg-[var(--s2)] hover:border-[var(--border-hi)] transition-colors mb-10 w-full flex flex-col items-center text-center">
+        {publications.map((pub) => {
+          const hasLink = 'link' in pub && pub.link;
+          const CardContent = (
+            <div className={`border border-[var(--border)] border-t-[3px] border-t-[var(--red)] rounded-md px-10 py-9 bg-[var(--s2)] hover:border-[var(--border-hi)] transition-all mb-10 w-full flex flex-col items-center text-center ${hasLink ? 'cursor-pointer hover:-translate-y-1' : ''}`}>
               <div className="font-mono text-[0.62rem] tracking-[0.18em] uppercase text-[var(--red)] mb-2.5">
                 {pub.venue}
               </div>
@@ -33,8 +34,20 @@ export function Research() {
                 ))}
               </div>
             </div>
-          </Reveal>
-        ))}
+          );
+
+          return (
+            <Reveal key={pub.title}>
+              {hasLink ? (
+                <a href={(pub as any).link} target="_blank" rel="noreferrer" className="block w-full">
+                  {CardContent}
+                </a>
+              ) : (
+                CardContent
+              )}
+            </Reveal>
+          );
+        })}
         <Reveal>
           <div className="font-mono text-[0.62rem] tracking-[0.24em] uppercase text-[var(--dim)] flex items-center justify-center gap-4 my-12 w-full">
             <span className="w-10 h-px bg-[var(--border)]" />
