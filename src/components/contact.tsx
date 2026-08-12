@@ -16,20 +16,33 @@ export function Contact() {
     setStatus("loading");
 
     try {
-      const res = await fetch("/api/contact", {
+      const submitData = {
+        access_key: process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY || "",
+        name: formData.name,
+        email: formData.email,
+        message: formData.message,
+      };
+
+      const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(submitData),
       });
 
-      if (res.ok) {
+      const result = await res.json();
+      if (result.success) {
         setStatus("success");
         setFormData({ name: "", email: "", message: "" });
         setTimeout(() => setStatus("idle"), 5000); // Reset after 5s
       } else {
+        console.error("Web3Forms Error:", result);
         setStatus("error");
       }
-    } catch {
+    } catch (error) {
+      console.error("Submission Error:", error);
       setStatus("error");
     }
   };
