@@ -1,6 +1,9 @@
 @import "tailwindcss";
 
 :root {
+  --font-inter: 'Inter', sans-serif;
+  --font-barlow: 'Barlow Condensed', sans-serif;
+  --font-ibm-plex-mono: 'IBM Plex Mono', monospace;
   --bg: #000000;
   --s1: #050505;
   --s2: #0a0a0a;
