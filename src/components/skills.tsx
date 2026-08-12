@@ -44,11 +44,12 @@ export function Skills() {
         </Reveal>
         <Reveal>
           <div className="flex justify-center flex-wrap gap-4 mt-2">
-            {activeTab.skills.map((skill) => (
+            {activeTab.skills.map((skill, index) => (
               <div
-                key={skill.name}
+                key={`${active}-${skill.name}`}
                 title={skill.name}
-                className="flex items-center justify-center w-14 h-14 rounded-lg border border-[var(--border)] bg-[var(--s2)] hover:border-[var(--border-hi)] hover:bg-[rgba(59,130,246,0.05)] hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 cursor-pointer group"
+                className="flex items-center justify-center w-14 h-14 rounded-lg border border-[var(--border)] bg-[var(--s2)] hover:border-[var(--border-hi)] hover:bg-[rgba(59,130,246,0.05)] hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 cursor-pointer group animate-stack-up"
+                style={{ animationDelay: `${index * 50}ms` }}
               >
                 <img
                   src={`https://cdn.simpleicons.org/${(skill as any).icon}${iconColor ? `/${iconColor}` : ''}`}
