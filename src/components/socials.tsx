@@ -2,7 +2,7 @@ import { profile } from "@/data/portfolio";
 
 export function Socials() {
   return (
-    <div className="fixed bottom-0 left-6 md:left-10 z-50 flex flex-col items-center gap-6 after:content-[''] after:w-[1px] after:h-20 md:after:h-24 after:bg-[var(--border-hi)]">
+    <div className="hidden md:flex fixed bottom-0 left-6 md:left-10 z-50 flex-col items-center gap-6 after:content-[''] after:w-[1px] after:h-20 md:after:h-24 after:bg-[var(--border-hi)]">
       <a
         href={profile.github}
         target="_blank"
