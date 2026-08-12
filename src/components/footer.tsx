@@ -1,10 +1,22 @@
+import { profile } from "@/data/portfolio";
+
 export function Footer() {
   return (
     <footer className="border-t border-[var(--border)] py-8 px-[5%] relative flex flex-col md:flex-row justify-center items-center gap-4">
       <p className="font-mono text-[0.65rem] tracking-wider uppercase text-[var(--dim)] text-center">
         © {new Date().getFullYear()} Rahul Daga. All rights Reserved.
       </p>
-      <div className="flex gap-4 md:absolute md:right-[5%]">
+      <div className="flex gap-4 md:absolute md:right-[5%] items-center">
+        <a
+          href={`mailto:${profile.email}`}
+          aria-label="Email"
+          className="text-[var(--dim)] hover:text-[var(--accent)] transition-colors"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+        </a>
         <a
           href="https://github.com/rahul02-dat"
           target="_blank"

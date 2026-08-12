@@ -49,12 +49,7 @@ export function Nav() {
           Blog
         </Link>
         <ThemeToggle />
-        <a
-          href="mailto:rahul.0411.da@gmail.com"
-          className="font-mono text-[0.68rem] tracking-[0.1em] uppercase px-4 py-2 rounded-sm border border-[var(--border-hi)] text-[var(--accent)] ml-1.5 hover:bg-[var(--accent)]/10 transition-colors"
-        >
-          Get in Touch
-        </a>
+
       </div>
     </nav>
   );
