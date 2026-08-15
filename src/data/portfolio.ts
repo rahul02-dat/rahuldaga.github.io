@@ -191,7 +191,7 @@ export const experiences: Experience[] = [
     badgeType: "past",
     accent: "isro",
     points: [
-      "AT ISRO, I was a part of the Atmospheric Sciences Division at Indian Space Research Organisation - Space Application Centre. I got the opportunity to work under the scientists working on a project based on direct retrieval of atmospheric parameters using satellite data. I was given a task to research on existing satellite data retrieval methods and based on my research, I proposed a method to retrieve atmospheric parameters directly using INSAT-3DS satellite data, by using AI and Machine Learning methods. By designing a training ensemble of various machine learning models and a custom neural network, I was able to achieve the automation of retrival with an R2 score of 98.73%"
+      "AT ISRO, I was a part of the Atmospheric Sciences Division at Indian Space Research Organization - Space Application Centre. I got the opportunity to work under the scientists working on a project based on direct retrieval of atmospheric parameters using satellite data. I was given a task to research on existing satellite data retrieval methods and based on my research, I proposed a method to retrieve atmospheric parameters directly using INSAT-3DS satellite data, by using AI and Machine Learning methods. By designing a training ensemble of various machine learning models and a custom neural network, I was able to achieve the automation of retrival with an R2 score of 98.73%"
     ],
     chips: ["Python", "TensorFlow", "NetCDF / HDF5", "NumPy / SciPy", "Satellite Remote Sensing", "Atmospheric Science"],
   },
@@ -202,7 +202,7 @@ export const experiences: Experience[] = [
     badgeType: "past",
     accent: "archsoft",
     points: [
-      "Being in Archsoft I was a part of a project which was based on development of an image forensics web application app, to detect digitally manipulated images and verify image authensticity. Implementing a Gradient-Weighted Class Activation Mapping Algorithm, fusing EfficientNet-B4 and DCT-Coefficients, I was able to generate visual heatmaps that mapped speciic pixels regions to forensic anomalies, with a ROC-AUC score of 93.85%"
+      "Being in Archsoft I was a part of a project which was based on development of an image forensics web application app, to detect digitally manipulated images and verify image authenticity. Implementing a Gradient-Weighted Class Activation Mapping Algorithm, fusing EfficientNet-B4 and DCT-Coefficients, I was able to generate visual heatmaps that mapped specific pixels regions to forensic anomalies, with a ROC-AUC score of 93.85%"
     ],
     chips: ["Python", "FastAPI", "SHA-256 Hashing", "EXIF Analysis", "Computer Vision"],
   },
