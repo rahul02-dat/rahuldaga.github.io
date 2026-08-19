@@ -48,6 +48,14 @@ export function Nav() {
         >
           Blog
         </Link>
+        <a
+          href="/resume.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hidden md:inline-block font-mono text-[0.68rem] tracking-[0.1em] uppercase text-[var(--accent)] border border-[var(--accent)] px-3.5 py-1.5 rounded-sm hover:bg-[var(--accent)]/[0.07] transition-colors ml-2 mr-2"
+        >
+          Resume
+        </a>
         <ThemeToggle />
 
       </div>
